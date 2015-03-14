@@ -133,7 +133,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="RedemptionLoader.cs" />
+    <None Include="RedemptionLoader.cs" />
     <Compile Include="RegexUtilities.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Shortcut.cs" />

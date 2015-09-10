@@ -165,6 +165,8 @@ namespace OutlookGoogleSync
                 return;
             }
 
+            tabControl1.SelectTab(tabPage1);
+
             bSyncNow.Enabled = false;
 
             LogBox.Clear();

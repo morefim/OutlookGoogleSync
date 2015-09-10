@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Reflection;
@@ -17,7 +14,7 @@ namespace OutlookGoogleSync
 
             public static int RegisterWindowMessage(string format, params object[] args)
             {
-                string message = String.Format(format, args);
+                var message = String.Format(format, args);
                 return RegisterWindowMessage(message);
             }
 
@@ -27,10 +24,10 @@ namespace OutlookGoogleSync
             [DllImport("user32")]
             public static extern bool PostMessage(IntPtr hwnd, int msg, IntPtr wparam, IntPtr lparam);
 
-            [DllImportAttribute("user32.dll")]
+            [DllImport("user32.dll")]
             public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
-            [DllImportAttribute("user32.dll")]
+            [DllImport("user32.dll")]
             public static extern bool SetForegroundWindow(IntPtr hWnd);
 
             public static void ShowToFront(IntPtr window)
@@ -46,12 +43,12 @@ namespace OutlookGoogleSync
             {
                 get
                 {
-                    object[] attributes = Assembly.GetEntryAssembly().GetCustomAttributes(typeof(System.Runtime.InteropServices.GuidAttribute), false);
+                    var attributes = Assembly.GetEntryAssembly().GetCustomAttributes(typeof(GuidAttribute), false);
                     if (attributes.Length == 0)
                     {
                         return String.Empty;
                     }
-                    return ((System.Runtime.InteropServices.GuidAttribute)attributes[0]).Value;
+                    return ((GuidAttribute)attributes[0]).Value;
 
                     /*//Assembly asm = Assembly.GetExecutingAssembly();
                     //return asm.GetType().GUID.ToString();
@@ -65,8 +62,8 @@ namespace OutlookGoogleSync
 
         static public bool Start()
         {
-            bool onlyInstance = false;
-            string mutexName = String.Format("Local\\{0}", ProgramInfo.AssemblyGuid);
+            var onlyInstance = false;
+            var mutexName = String.Format("Local\\{0}", ProgramInfo.AssemblyGuid);
 
             // if you want your app to be limited to a single instance
             // across ALL SESSIONS (multiple users & terminal services), then use the following line instead:

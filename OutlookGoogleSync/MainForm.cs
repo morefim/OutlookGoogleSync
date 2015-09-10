@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Windows.Forms;
 
 namespace OutlookGoogleSync
@@ -14,13 +15,13 @@ namespace OutlookGoogleSync
     {
         public static MainForm Instance;
 
-        public const string FILENAME = "settings.xml";
-        public const string VERSION = "1.0.8";
+        public const string Filename = "settings.xml";
+        public const string Version = "1.0.8";
 
-        public Timer ogstimer;
-        public DateTime oldtime;
+        public Timer Ogstimer;
+        public DateTime Oldtime;
 
-        SyncManager _syncManager = new SyncManager();
+        readonly SyncManager _syncManager = new SyncManager();
 
         public MainForm()
         {
@@ -28,20 +29,20 @@ namespace OutlookGoogleSync
 
             Instance = this;
 
-            _syncManager.OnLogboxOutDelegate += logboxout;
+            _syncManager.OnLogboxOutDelegate += Logboxout;
             _syncManager.OnExceptionDelegate += HandleException;
             _syncManager.OnSyncDoneDelegate += SyncDone;
 
             //set system proxy
-            System.Net.WebRequest.DefaultWebProxy = null; 
+            WebRequest.DefaultWebProxy = null; 
 
             //load settings/create settings file
             try
             {
-                if (File.Exists(FILENAME))
-                    OGSSettings.Instance = XMLManager.import<OGSSettings>(FILENAME);
+                if (File.Exists(Filename))
+                    OGSSettings.Instance = XMLManager.import<OGSSettings>(Filename);
                 else
-                    XMLManager.export(OGSSettings.Instance, FILENAME);
+                    XMLManager.export(OGSSettings.Instance, Filename);
             }
             catch (Exception e)
             {
@@ -68,14 +69,14 @@ namespace OutlookGoogleSync
             tbOutlookPassword.PasswordChar = '*';
 
             //set up timer (every 30s) for checking the minute offsets
-            ogstimer = new Timer();
-            ogstimer.Interval = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
-            ogstimer.Tick += new EventHandler(ogstimer_Tick);
-            ogstimer.Start();
-            oldtime = DateTime.Now.RoundDown(OGSSettings.Instance.SyncPeriod);
+            Ogstimer = new Timer();
+            Ogstimer.Interval = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
+            Ogstimer.Tick += new EventHandler(ogstimer_Tick);
+            Ogstimer.Start();
+            Oldtime = DateTime.Now.RoundDown(OGSSettings.Instance.SyncPeriod);
 
             //set up tooltips for some controls
-            ToolTip toolTip1 = new ToolTip();
+            var toolTip1 = new ToolTip();
             toolTip1.AutoPopDelay = 10000;
             toolTip1.InitialDelay = 500;
             toolTip1.ReshowDelay = 200;
@@ -101,10 +102,10 @@ namespace OutlookGoogleSync
             //Start in tray?
             if (cbStartInTray.Checked)
             {
-                this.WindowState = FormWindowState.Minimized;
+                WindowState = FormWindowState.Minimized;
                 notifyIcon.Visible = true;
-                this.ShowInTaskbar = false;
-                this.Hide();
+                ShowInTaskbar = false;
+                Hide();
             }
         }
 
@@ -112,11 +113,11 @@ namespace OutlookGoogleSync
         {
             if (!cbSyncEvery.Checked) return;
 
-            DateTime newtime = DateTime.Now;
-            if ((newtime - oldtime) < new TimeSpan(0, OGSSettings.Instance.SyncPeriod, 0)) 
+            var newtime = DateTime.Now;
+            if ((newtime - Oldtime) < new TimeSpan(0, OGSSettings.Instance.SyncPeriod, 0)) 
                 return;
 
-            oldtime = newtime;
+            Oldtime = newtime;
             SyncNow_Click(null, null);
         }
 
@@ -141,22 +142,22 @@ namespace OutlookGoogleSync
             bGetMyCalendars.Enabled = false;
             cbCalendars.Enabled = false;
 
-            List<OGSCalendarListEntry> calendars = GoogleCalendar.Instance.getCalendars();
+            var calendars = GoogleCalendar.Instance.getCalendars();
             if (calendars != null)
             {
                 cbCalendars.Items.Clear();
-                foreach (OGSCalendarListEntry mcle in calendars)
+                foreach (var mcle in calendars)
                 {
                     cbCalendars.Items.Add(mcle);
                 }
-                MainForm.Instance.cbCalendars.SelectedIndex = 0;
+                Instance.cbCalendars.SelectedIndex = 0;
             }
 
             bGetMyCalendars.Enabled = true;
             cbCalendars.Enabled = true;
         }
 
-        void SyncNow_Click(object sender, EventArgs e)
+        async void SyncNow_Click(object sender, EventArgs e)
         {
             if (OGSSettings.Instance.UseGoogleCalendar.IsEmpty)
             {
@@ -168,15 +169,15 @@ namespace OutlookGoogleSync
 
             LogBox.Clear();
 
-            _syncManager.DoWork();
+            await _syncManager.DoWork();
 
             bSyncNow.Enabled = true;
         }
 
-        void logboxout(string s)
+        void Logboxout(string s)
         {
             if (LogBox.InvokeRequired)
-                Invoke((Action<string>)logboxout, new object[] { s });
+                Invoke((Action<string>)Logboxout, new object[] { s });
             else
                 LogBox.Text += s + Environment.NewLine;
         }
@@ -198,10 +199,10 @@ namespace OutlookGoogleSync
                         notifyIcon.ShowBalloonTip(500);
                     }
 
-                    logboxout("Exception: " + ex.Message);
+                    Logboxout("Exception: " + ex.Message);
                     using (TextWriter tw = new StreamWriter("exception.txt"))
                     {
-                        tw.WriteLine(DateTime.Now.ToString() + "\t" + ex.ToString());
+                        tw.WriteLine(DateTime.Now + "\t" + ex);
                         tw.Close();
                     }
                 }
@@ -211,7 +212,7 @@ namespace OutlookGoogleSync
 
         void Save_Click(object sender, EventArgs e)
         {
-            XMLManager.export(OGSSettings.Instance, FILENAME);
+            XMLManager.export(OGSSettings.Instance, Filename);
         }
 
         private void tbSyncPeriod_TextChanged(object sender, EventArgs e)
@@ -246,22 +247,22 @@ namespace OutlookGoogleSync
             OGSSettings.Instance.DaysInTheFuture = int.Parse(tbDaysInTheFuture.Text);
         }
 
-        void CbSyncEveryHourCheckedChanged(object sender, System.EventArgs e)
+        void CbSyncEveryHourCheckedChanged(object sender, EventArgs e)
         {
             OGSSettings.Instance.SyncEvery = cbSyncEvery.Checked;
         }
 
-        void CbShowBubbleTooltipsCheckedChanged(object sender, System.EventArgs e)
+        void CbShowBubbleTooltipsCheckedChanged(object sender, EventArgs e)
         {
             OGSSettings.Instance.ShowBubbleTooltipWhenSyncing = cbShowBubbleTooltips.Checked;
         }
 
-        void CbStartInTrayCheckedChanged(object sender, System.EventArgs e)
+        void CbStartInTrayCheckedChanged(object sender, EventArgs e)
         {
             OGSSettings.Instance.StartInTray = cbStartInTray.Checked;
         }
 
-        void CbMinimizeToTrayCheckedChanged(object sender, System.EventArgs e)
+        void CbMinimizeToTrayCheckedChanged(object sender, EventArgs e)
         {
             OGSSettings.Instance.MinimizeToTray = cbMinimizeToTray.Checked;
         }
@@ -298,21 +299,21 @@ namespace OutlookGoogleSync
 
         void MainFormResize(object sender, EventArgs e)
         {
-            showToolStripMenuItem.Text = this.WindowState == FormWindowState.Normal ? "Hide" : "Show...";
+            showToolStripMenuItem.Text = WindowState == FormWindowState.Normal ? "Hide" : "Show...";
 
             if (!cbMinimizeToTray.Checked)
                 return;
 
-            if (this.WindowState == FormWindowState.Minimized)
+            if (WindowState == FormWindowState.Minimized)
             {
                 notifyIcon.Visible = true;
                 // notifyIcon1.ShowBalloonTip(500, "OutlookGoogleSync", "Click to open again.", ToolTipIcon.Info);
-                this.ShowInTaskbar = false;
-                this.Hide();
+                ShowInTaskbar = false;
+                Hide();
             }
-            else if (this.WindowState == FormWindowState.Normal)
+            else if (WindowState == FormWindowState.Normal)
             {
-                this.ShowInTaskbar = true;
+                ShowInTaskbar = true;
                 // notifyIcon1.Visible = false;
             }
         }
@@ -324,20 +325,20 @@ namespace OutlookGoogleSync
 
         private void showToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (this.WindowState == FormWindowState.Normal)
+            if (WindowState == FormWindowState.Normal)
             {
-                this.WindowState = FormWindowState.Minimized;
+                WindowState = FormWindowState.Minimized;
             }
             else
             {
-                this.Show();
-                this.WindowState = FormWindowState.Normal;
+                Show();
+                WindowState = FormWindowState.Normal;
             }
         }
 
         private void buttonIconize_Click(object sender, EventArgs e)
         {
-            this.WindowState = FormWindowState.Minimized;
+            WindowState = FormWindowState.Minimized;
         }
 
         private void sincNowToolStripMenuItem_Click(object sender, EventArgs e)
@@ -354,7 +355,6 @@ namespace OutlookGoogleSync
             return value.Length <= maxLength ? value : value.Substring(0, maxLength);
         }
     }
-
 
     public static class DateTimeExt
     {

@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using IWshRuntimeLibrary;
 using Shell32;
 using System.Windows.Forms;
 using System.IO;
+using File = System.IO.File;
 
 namespace OutlookGoogleSync
 {
@@ -55,7 +53,7 @@ namespace OutlookGoogleSync
             var wshShell = new WshShellClass();
 
             // Create shortcut object:
-            IWshRuntimeLibrary.IWshShortcut shorcut = (IWshRuntimeLibrary.IWshShortcut)wshShell.CreateShortcut(ShortcutFile);
+            var shorcut = (IWshShortcut)wshShell.CreateShortcut(ShortcutFile);
 
             // Assign shortcut properties:
             shorcut.TargetPath = SourceFile;
@@ -76,9 +74,9 @@ namespace OutlookGoogleSync
             if (IsStartupFolderShortcutExists())
                 return;
 
-            WshShellClass wshShell = new WshShellClass();
-            IWshRuntimeLibrary.IWshShortcut shortcut;
-            string startUpFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.Startup);
+            var wshShell = new WshShellClass();
+            IWshShortcut shortcut;
+            var startUpFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.Startup);
 
             // Create the shortcut
             shortcut = (IWshShortcut)wshShell.CreateShortcut(startUpFolderPath + "\\" + Application.ProductName + ".lnk");
@@ -95,15 +93,15 @@ namespace OutlookGoogleSync
             if (shortcutFilename.Length == 0)
                 shortcutFilename = Environment.GetFolderPath(Environment.SpecialFolder.Startup) + "\\" + Application.ProductName + ".lnk";
 
-            string pathOnly = Path.GetDirectoryName(shortcutFilename);
-            string filenameOnly = Path.GetFileName(shortcutFilename);
+            var pathOnly = Path.GetDirectoryName(shortcutFilename);
+            var filenameOnly = Path.GetFileName(shortcutFilename);
 
-            Shell32.Shell shell = new Shell32.ShellClass();
-            Shell32.Folder folder = shell.NameSpace(pathOnly);
-            Shell32.FolderItem folderItem = folder.ParseName(filenameOnly);
+            Shell shell = new ShellClass();
+            var folder = shell.NameSpace(pathOnly);
+            var folderItem = folder.ParseName(filenameOnly);
             if (folderItem != null)
             {
-                Shell32.ShellLinkObject link = (ShellLinkObject)folderItem.GetLink;
+                var link = (ShellLinkObject)folderItem.GetLink;
                 return link.Path;
             }
 
@@ -112,23 +110,23 @@ namespace OutlookGoogleSync
 
         public static bool IsStartupFolderShortcutExists()
         {
-            return Shortcut.GetShortcutTargetFile(string.Empty) == Application.ExecutablePath;
+            return GetShortcutTargetFile(string.Empty) == Application.ExecutablePath;
         }
 
         public static void DeleteStartupFolderShortcuts(string targetExeName)
         {
-            string startUpFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.Startup);
+            var startUpFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.Startup);
 
-            DirectoryInfo di = new DirectoryInfo(startUpFolderPath);
-            FileInfo[] files = di.GetFiles("*.lnk");
+            var di = new DirectoryInfo(startUpFolderPath);
+            var files = di.GetFiles("*.lnk");
 
-            foreach (FileInfo fi in files)
+            foreach (var fi in files)
             {
-                string shortcutTargetFile = GetShortcutTargetFile(fi.FullName);
+                var shortcutTargetFile = GetShortcutTargetFile(fi.FullName);
 
                 if (shortcutTargetFile.EndsWith(targetExeName, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    System.IO.File.Delete(fi.FullName);
+                    File.Delete(fi.FullName);
                 }
             }
         }

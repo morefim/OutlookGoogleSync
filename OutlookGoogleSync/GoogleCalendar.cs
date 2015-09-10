@@ -45,7 +45,7 @@ namespace OutlookGoogleSync
             IAuthorizationState state = new AuthorizationState(new[] { CalendarService.Scopes.Calendar.GetStringValue() });
             state.Callback = new Uri(NativeApplicationClient.OutOfBandCallbackUrl);
             state.RefreshToken = Coder.Decrypt(OGSSettings.Instance.RefreshToken);
-            Uri authUri = arg.RequestUserAuthorization(state);
+            var authUri = arg.RequestUserAuthorization(state);
             
             IAuthorizationState result = null;
             
@@ -54,7 +54,7 @@ namespace OutlookGoogleSync
                 // Request authorization from the user (by opening a browser window):
                 Process.Start(authUri.ToString());
                 
-                EnterAuthorizationCode eac = new EnterAuthorizationCode();
+                var eac = new EnterAuthorizationCode();
                 if (eac.ShowDialog(MainForm.Instance) == DialogResult.OK)
                 {
                     // Retrieve the access/refresh tokens by using the authorization code:
@@ -62,7 +62,7 @@ namespace OutlookGoogleSync
                     
                     //save the refresh token for future use
                     OGSSettings.Instance.RefreshToken = Coder.Encrypt(result.RefreshToken);
-                    XMLManager.export(OGSSettings.Instance, MainForm.FILENAME);
+                    XMLManager.export(OGSSettings.Instance, MainForm.Filename);
                     
                     return result;
                 } 
@@ -82,12 +82,12 @@ namespace OutlookGoogleSync
 
         public List<OGSCalendarListEntry> getCalendars()
         {
-            CalendarList request = service.CalendarList.List().Fetch();            
+            var request = service.CalendarList.List().Fetch();            
             if (request != null)
             {
 
-                List<OGSCalendarListEntry> result = new List<OGSCalendarListEntry>();
-                foreach (CalendarListEntry cle in request.Items)
+                var result = new List<OGSCalendarListEntry>();
+                foreach (var cle in request.Items)
                 {
                     result.Add(new OGSCalendarListEntry(cle));
                 }
@@ -98,13 +98,13 @@ namespace OutlookGoogleSync
 		
         public List<Event> getCalendarEntriesInRange()
         {
-            List<Event> result = new List<Event>();
-            EventsResource.ListRequest lr = service.Events.List(OGSSettings.Instance.UseGoogleCalendar.CalendarID);
+            var result = new List<Event>();
+            var lr = service.Events.List(OGSSettings.Instance.UseGoogleCalendar.CalendarID);
 
             lr.TimeMin = GoogleTimeFrom(DateTime.Now.AddDays(-OGSSettings.Instance.DaysInThePast));
             lr.TimeMax = GoogleTimeFrom(DateTime.Now.AddDays(+OGSSettings.Instance.DaysInTheFuture + 1));
 
-            Events request = lr.Fetch();
+            var request = lr.Fetch();
             if (request != null && request.Items != null)
             {
                 result.AddRange(request.Items);
@@ -114,7 +114,7 @@ namespace OutlookGoogleSync
 
         public void deleteCalendarEntry(Event e)
         {
-            string request = service.Events.Delete(OGSSettings.Instance.UseGoogleCalendar.CalendarID, e.Id).Fetch();
+            var request = service.Events.Delete(OGSSettings.Instance.UseGoogleCalendar.CalendarID, e.Id).Fetch();
         }
 
         public void addEntry(Event e)
@@ -126,11 +126,11 @@ namespace OutlookGoogleSync
 		//Google Time Format = "2012-08-20T00:00:00+02:00"
 		public string GoogleTimeFrom(DateTime dt)
 		{
-            string timezone = TimeZoneInfo.Local.GetUtcOffset(dt).ToString();
+            var timezone = TimeZoneInfo.Local.GetUtcOffset(dt).ToString();
             if (timezone[0] != '-') timezone = '+' + timezone;
             timezone = timezone.Substring(0,6);
             
-            string result = dt.GetDateTimeFormats('s')[0] + timezone;
+            var result = dt.GetDateTimeFormats('s')[0] + timezone;
             return result;
 		}		
 	}

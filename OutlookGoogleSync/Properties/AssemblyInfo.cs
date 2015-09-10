@@ -1,6 +1,5 @@
 ﻿#region Using directives
 
-using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
@@ -29,4 +28,4 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can use the default the Revision and 
 // Build Numbers by using the '*' as shown below:
 [assembly: AssemblyVersion("1.0.*")]
-[assembly: GuidAttribute("79B0BED7-0129-4C4B-8544-6B63993481F4")]
+[assembly: Guid("79B0BED7-0129-4C4B-8544-6B63993481F4")]

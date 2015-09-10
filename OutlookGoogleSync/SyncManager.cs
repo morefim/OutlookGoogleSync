@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Office.Interop.Outlook;
-using Google.Apis.Calendar.v3;
-using Google.Apis.Calendar.v3.Data;
 using System.IO;
-using System.Threading;
-using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace OutlookGoogleSync
 {
@@ -15,145 +10,140 @@ namespace OutlookGoogleSync
     {
         public delegate void SyncDoneDelegate(int deleted, int created);
         public delegate void LogboxOutDelegate(string text);
-        public delegate void HandleExceptionDelegate(System.Exception e);
+        public delegate void HandleExceptionDelegate(Exception e);
 
         public event LogboxOutDelegate OnLogboxOutDelegate;
         public event HandleExceptionDelegate OnExceptionDelegate;
         public event SyncDoneDelegate OnSyncDoneDelegate;
 
-        public void DoWork()
+        public async Task DoWork()
         {
-            ThreadPool.QueueUserWorkItem(DoWorkCallback, this);
-        }
-
-        private void DoWorkCallback(Object threadContext)
-        {
-            int max_attempts = 3;
-            for (int attempt = 0; attempt < max_attempts; attempt++)
+            const int maxAttempts = 3;
+            for (var attempt = 0; attempt < maxAttempts; attempt++)
             {
                 try
                 {
-                    PrivateDoWorkCallback(threadContext);
+                    PrivateDoWorkCallback();
                     break;
                 }
-                catch (System.Exception e)
+                catch (Exception e)
                 {
-                    if (OnExceptionDelegate != null && attempt + 1 >= max_attempts)
+                    if (OnExceptionDelegate != null && attempt + 1 >= maxAttempts)
                         OnExceptionDelegate(e);
                 }
             }
         }
 
-        private void PrivateDoWorkCallback(Object threadContext)
+        private void PrivateDoWorkCallback()
         {
-            DateTime SyncStarted = DateTime.Now;
-            bool cbCreateFilesChecked = OGSSettings.Instance.CreateTextFiles;
-            bool cbAddDescriptionChecked = OGSSettings.Instance.AddDescription;
-            bool cbAddRemindersChecked = OGSSettings.Instance.AddReminders;
-            bool cbAddAttendeesChecked = OGSSettings.Instance.AddAttendeesToDescription;
+            var syncStarted = DateTime.Now;
+            var cbCreateFilesChecked = OGSSettings.Instance.CreateTextFiles;
+            var cbAddDescriptionChecked = OGSSettings.Instance.AddDescription;
+            var cbAddRemindersChecked = OGSSettings.Instance.AddReminders;
+            var cbAddAttendeesChecked = OGSSettings.Instance.AddAttendeesToDescription;
 
-            OnLogboxOutDelegate("Sync started at " + SyncStarted.ToString());
+            OnLogboxOutDelegate("Sync started at " + syncStarted);
             OnLogboxOutDelegate("--------------------------------------------------");
 
             OnLogboxOutDelegate("Reading Outlook Calendar Entries...");
-            GoogleEventsList OutlookEntries = new GoogleEventsList(OutlookCalendar.Instance.getCalendarEntriesInRange());
+            var outlookEntries = new GoogleEventsList(OutlookCalendar.Instance.getCalendarEntriesInRange());
             if (cbCreateFilesChecked)
             {
                 using (TextWriter tw = new StreamWriter("export_found_in_outlook.txt"))
                 {
-                    foreach (GoogleEvent ai in OutlookEntries)
+                    foreach (var ai in outlookEntries)
                     {
                         tw.WriteLine(ai.ToString());
                     }
                     tw.Close();
                 }
             }
-            OnLogboxOutDelegate("Found " + OutlookEntries.Count + " Outlook Calendar Entries.");
+            OnLogboxOutDelegate("Found " + outlookEntries.Count + " Outlook Calendar Entries.");
             OnLogboxOutDelegate("--------------------------------------------------");
 
             OnLogboxOutDelegate("Reading Google Calendar Entries...");
-            GoogleEventsList GoogleEntries = new GoogleEventsList(GoogleCalendar.Instance.getCalendarEntriesInRange());
+            var googleEntries = new GoogleEventsList(GoogleCalendar.Instance.getCalendarEntriesInRange());
             if (cbCreateFilesChecked)
             {
                 using (TextWriter tw = new StreamWriter("export_found_in_google.txt"))
                 {
-                    foreach (GoogleEvent ev in GoogleEntries)
+                    foreach (var ev in googleEntries)
                     {
                         tw.WriteLine(ev.ToString());
                     }
                     tw.Close();
                 }
             }
-            OnLogboxOutDelegate("Found " + GoogleEntries.Count + " Google Calendar Entries.");
+            OnLogboxOutDelegate("Found " + googleEntries.Count + " Google Calendar Entries.");
             OnLogboxOutDelegate("--------------------------------------------------");
 
-            List<GoogleEvent> GoogleEntriesToBeDeleted = IdentifyGoogleEntriesToBeDeleted(OutlookEntries, GoogleEntries);
+            var googleEntriesToBeDeleted = IdentifyGoogleEntriesToBeDeleted(outlookEntries, googleEntries);
             if (cbCreateFilesChecked)
             {
                 using (TextWriter tw = new StreamWriter("export_to_be_deleted.txt"))
                 {
-                    foreach (GoogleEvent ev in GoogleEntriesToBeDeleted)
+                    foreach (var ev in googleEntriesToBeDeleted)
                     {
                         tw.WriteLine(ev.ToString());
                     }
                     tw.Close();
                 }
             }
-            OnLogboxOutDelegate(GoogleEntriesToBeDeleted.Count + " Google Calendar Entries to be deleted.");
+            OnLogboxOutDelegate(googleEntriesToBeDeleted.Count + " Google Calendar Entries to be deleted.");
 
             //OutlookEntriesToBeCreated ...in Google!
-            List<GoogleEvent> OutlookEntriesToBeCreated = IdentifyOutlookEntriesToBeCreated(OutlookEntries, GoogleEntries);
+            var outlookEntriesToBeCreated = IdentifyOutlookEntriesToBeCreated(outlookEntries, googleEntries);
             if (cbCreateFilesChecked)
             {
                 using (TextWriter tw = new StreamWriter("export_to_be_created.txt"))
                 {
-                    foreach (GoogleEvent ai in OutlookEntriesToBeCreated)
+                    foreach (var ai in outlookEntriesToBeCreated)
                     {
                         tw.WriteLine(ai.ToString());
                     }
                     tw.Close();
                 }
             }
-            OnLogboxOutDelegate(OutlookEntriesToBeCreated.Count + " Entries to be created in Google.");
+            OnLogboxOutDelegate(outlookEntriesToBeCreated.Count + " Entries to be created in Google.");
             OnLogboxOutDelegate("--------------------------------------------------");
 
-            if (GoogleEntriesToBeDeleted.Count > 0)
+            if (googleEntriesToBeDeleted.Count > 0)
             {
-                OnLogboxOutDelegate("Deleting " + GoogleEntriesToBeDeleted.Count + " Google Calendar Entries...");
-                foreach (GoogleEvent ev in GoogleEntriesToBeDeleted)
+                OnLogboxOutDelegate("Deleting " + googleEntriesToBeDeleted.Count + " Google Calendar Entries...");
+                foreach (var ev in googleEntriesToBeDeleted)
                 {
-                    OnLogboxOutDelegate(string.Format(" {0}", ev.ToString()));
+                    OnLogboxOutDelegate(string.Format(" {0}", ev));
                     GoogleCalendar.Instance.deleteCalendarEntry(ev.Event);
                 }
                 OnLogboxOutDelegate("Done.");
                 OnLogboxOutDelegate("--------------------------------------------------");
             }
 
-            if (OutlookEntriesToBeCreated.Count > 0)
+            if (outlookEntriesToBeCreated.Count > 0)
             {
-                OnLogboxOutDelegate("Creating " + OutlookEntriesToBeCreated.Count + " Entries in Google...");
-                foreach (GoogleEvent ai in OutlookEntriesToBeCreated)
+                OnLogboxOutDelegate("Creating " + outlookEntriesToBeCreated.Count + " Entries in Google...");
+                foreach (var ai in outlookEntriesToBeCreated)
                 {
-                    OnLogboxOutDelegate(string.Format(" {0}", ai.ToString()));
+                    OnLogboxOutDelegate(string.Format(" {0}", ai));
                     GoogleCalendar.Instance.addEntry(ai.Event);
                 }
                 OnLogboxOutDelegate("Done.");
                 OnLogboxOutDelegate("--------------------------------------------------");
             }
 
-            DateTime SyncFinished = DateTime.Now;
-            TimeSpan Elapsed = SyncFinished - SyncStarted;
-            OnLogboxOutDelegate("Sync finished at " + SyncFinished.ToString());
-            OnLogboxOutDelegate("Time needed: " + Elapsed.Minutes + " min " + Elapsed.Seconds + " s");
-            OnSyncDoneDelegate(GoogleEntriesToBeDeleted.Count, OutlookEntriesToBeCreated.Count);
+            var syncFinished = DateTime.Now;
+            var elapsed = syncFinished - syncStarted;
+            OnLogboxOutDelegate("Sync finished at " + syncFinished);
+            OnLogboxOutDelegate("Time needed: " + elapsed.Minutes + " min " + elapsed.Seconds + " s");
+            OnSyncDoneDelegate(googleEntriesToBeDeleted.Count, outlookEntriesToBeCreated.Count);
         }
 
         public List<GoogleEvent> IdentifyGoogleEntriesToBeDeleted(List<GoogleEvent> outlook, List<GoogleEvent> google)
         {
-            List<GoogleEvent> result = new List<GoogleEvent>();
-            foreach (GoogleEvent g in google)
+            var result = new List<GoogleEvent>();
+            foreach (var g in google)
             {
-                bool found = outlook.Exists(o => g.Equals(o));
+                var found = outlook.Exists(o => g.Equals(o));
                 if (!found)
                 {
                     //Debug.Assert(false);
@@ -162,7 +152,7 @@ namespace OutlookGoogleSync
 
                 // find duplicates
                 found = google.FindAll(o => g.Equals(o)).Count > 1;
-                bool added = result.Exists(r => g.Equals(r));
+                var added = result.Exists(r => g.Equals(r));
                 if (found & !added)
                 {
                     //Debug.Assert(false);
@@ -174,18 +164,7 @@ namespace OutlookGoogleSync
 
         public List<GoogleEvent> IdentifyOutlookEntriesToBeCreated(List<GoogleEvent> outlook, List<GoogleEvent> google)
         {
-            List<GoogleEvent> result = new List<GoogleEvent>();
-            foreach (GoogleEvent o in outlook)
-            {
-                bool found = google.Exists(g => g.Equals(o));
-
-                if (!found)
-                {
-                    //Debug.Assert(false);
-                    result.Add(o);
-                }
-            }
-            return result;
+            return (from o in outlook let found = google.Exists(g => g.Equals(o)) where !found select o).ToList();
         }
     }
 }

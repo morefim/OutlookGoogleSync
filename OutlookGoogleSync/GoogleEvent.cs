@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Microsoft.Office.Interop.Outlook;
-using Google.Apis.Calendar.v3;
 using Google.Apis.Calendar.v3.Data;
+using Microsoft.Office.Interop.Outlook;
 
 namespace OutlookGoogleSync
 {
@@ -51,7 +49,7 @@ namespace OutlookGoogleSync
                 //consider the reminder set in Outlook
                 _event.Reminders = new Event.RemindersData();
                 _event.Reminders.UseDefault = false;
-                EventReminder reminder = new EventReminder();
+                var reminder = new EventReminder();
                 reminder.Method = "popup";
                 reminder.Minutes = ai.ReminderMinutesBeforeStart;
                 _event.Reminders.Overrides = new List<EventReminder>();
@@ -108,10 +106,10 @@ namespace OutlookGoogleSync
 
         public IList<EventAttendee> AtendeesToList(string[] attendees, bool optional)
         {
-            List<EventAttendee> attendeesList = new List<EventAttendee>();
+            var attendeesList = new List<EventAttendee>();
             foreach (var attendee in attendees)
             {
-                string email = EmailFromName(attendee);
+                var email = EmailFromName(attendee);
                 if (email == null)
                     continue;
                 attendeesList.Add(new EventAttendee() { DisplayName = attendee, Email = email, Optional = optional });
@@ -125,11 +123,11 @@ namespace OutlookGoogleSync
         public string EmailFromName(string attendee)
         {
             attendee = attendee.Trim();
-            RegexUtilities regex = new RegexUtilities();
+            var regex = new RegexUtilities();
             if (regex.IsValidEmail(attendee))
                 return attendee;
 
-            string[] name = attendee.Split(',');
+            var name = attendee.Split(',');
             if (name.Count() == 2)
             {
                 var email = name[1].ToLower().Trim() + "." + name[0].ToLower().Trim() + "@kla-tencor.com";                
@@ -142,14 +140,14 @@ namespace OutlookGoogleSync
         public string splitAttendees(string attendees)
         {
             if (attendees == null) return "";
-            string[] tmp1 = attendees.Split(';');
-            for (int i = 0; i < tmp1.Length; i++) tmp1[i] = tmp1[i].Trim();
+            var tmp1 = attendees.Split(';');
+            for (var i = 0; i < tmp1.Length; i++) tmp1[i] = tmp1[i].Trim();
             return String.Join(Environment.NewLine, tmp1);
         }
 
         public override string ToString()
         {
-            string outString = string.Empty;
+            var outString = string.Empty;
 
             if (_event == null)
                 return outString;
@@ -211,7 +209,7 @@ namespace OutlookGoogleSync
         public override bool Equals(object obj)
         {
             // If parameter cannot be cast to ThreeDPoint return false:
-            GoogleEvent p = obj as GoogleEvent;
+            var p = obj as GoogleEvent;
             if ((object)p == null)
             {
                 return false;
@@ -253,7 +251,7 @@ namespace OutlookGoogleSync
         public static bool operator ==(GoogleEvent a, GoogleEvent b)
         {
             // If both are null, or both are same instance, return true.
-            if (System.Object.ReferenceEquals(a, b))
+            if (ReferenceEquals(a, b))
             {
                 return true;
             }
@@ -278,13 +276,13 @@ namespace OutlookGoogleSync
     {
         public GoogleEventsList(List<Event> inList)
         {
-            foreach (Event item in inList)
+            foreach (var item in inList)
                 Add(new GoogleEvent(item));
         }
 
         public GoogleEventsList(List<AppointmentItem> inList)
         {
-            foreach (AppointmentItem item in inList)
+            foreach (var item in inList)
                 Add(new GoogleEvent(item));
         }
     }

@@ -41,11 +41,11 @@ namespace OutlookGoogleSync
         public OutlookCalendar()
         {        
             // Create the Outlook application.
-            Application oApp = new Application();
+            var oApp = new Application();
 
             // Get the NameSpace and Logon information.
             // Outlook.NameSpace oNS = (Outlook.NameSpace)oApp.GetNamespace("mapi");
-            NameSpace oNS = oApp.GetNamespace("mapi");
+            var oNS = oApp.GetNamespace("mapi");
 
             //Log on by using a dialog box to choose the profile.
             oNS.Logon(OGSSettings.Instance.User, OGSSettings.Instance.OutlookPassword, true, true);
@@ -69,10 +69,10 @@ namespace OutlookGoogleSync
         
         public List<AppointmentItem> getCalendarEntries()
         {
-            Items OutlookItems = UseOutlookCalendar.Items;
+            var OutlookItems = UseOutlookCalendar.Items;
             if (OutlookItems != null)
             {
-                List<AppointmentItem> result = new List<AppointmentItem>();
+                var result = new List<AppointmentItem>();
                 foreach (AppointmentItem ai in OutlookItems)
                 {
                     result.Add(ai);
@@ -84,16 +84,16 @@ namespace OutlookGoogleSync
         
         public List<AppointmentItem> getCalendarEntriesInRange()
         {
-            List<AppointmentItem> result = new List<AppointmentItem>();
+            var result = new List<AppointmentItem>();
             
-            Items OutlookItems = UseOutlookCalendar.Items;
+            var OutlookItems = UseOutlookCalendar.Items;
             OutlookItems.Sort("[Start]",Type.Missing);
             OutlookItems.IncludeRecurrences = true;
             
             if (OutlookItems != null)
             {
-                DateTime min = DateTime.Now.AddDays(-OGSSettings.Instance.DaysInThePast);
-                DateTime max = DateTime.Now.AddDays(+OGSSettings.Instance.DaysInTheFuture+1);
+                var min = DateTime.Now.AddDays(-OGSSettings.Instance.DaysInThePast);
+                var max = DateTime.Now.AddDays(+OGSSettings.Instance.DaysInTheFuture+1);
 
                 //initial version: did not work in all non-German environments
                 //string filter = "[End] >= '" + min.ToString("dd.MM.yyyy HH:mm") + "' AND [Start] < '" + max.ToString("dd.MM.yyyy HH:mm") + "'";
@@ -102,7 +102,7 @@ namespace OutlookGoogleSync
                 //string filter = "[End] >= '" + min.ToString("dd.MM.yyyy HH:mm") + "' AND [Start] < '" + max.ToString("dd.MM.yyyy HH:mm") + "'";
 
                 //trying this instead, also proposed by WolverineFan, thanks!!! 
-                string filter = "[End] >= '" + min.ToString("g") + "' AND [Start] < '" + max.ToString("g") + "'";
+                var filter = "[End] >= '" + min.ToString("g") + "' AND [Start] < '" + max.ToString("g") + "'";
                 
                 
                 foreach(AppointmentItem ai in OutlookItems.Restrict(filter))

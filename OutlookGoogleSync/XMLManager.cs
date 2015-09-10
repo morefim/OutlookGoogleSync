@@ -17,7 +17,7 @@ namespace OutlookGoogleSync
         /// <param name="filename">The filename of the xml file to be written.</param>
         public static void export(Object obj, string filename)
         {
-            using (XmlTextWriter writer = new XmlTextWriter(filename, null))
+            using (var writer = new XmlTextWriter(filename, null))
             {
                 writer.Indentation = 4;
                 writer.Formatting = Formatting.Indented;
@@ -32,10 +32,10 @@ namespace OutlookGoogleSync
         /// <returns></returns>
         public static T import<T>(string filename)
         {
-            using (FileStream fs = new FileStream(filename, FileMode.Open))
+            using (var fs = new FileStream(filename, FileMode.Open))
             {
                 var xmlSerializer = new XmlSerializer(typeof(T));
-                T result = (T)xmlSerializer.Deserialize(fs);
+                var result = (T)xmlSerializer.Deserialize(fs);
                 return result;
             }
         }

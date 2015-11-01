@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace OutlookGoogleSync
@@ -171,7 +172,7 @@ namespace OutlookGoogleSync
 
             LogBox.Clear();
 
-            await _syncManager.DoWork();
+            await Task.Run((Func<Task>) _syncManager.DoWork);
 
             bSyncNow.Enabled = true;
         }

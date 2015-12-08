@@ -180,9 +180,9 @@ namespace OutlookGoogleSync
         void Logboxout(string s)
         {
             if (LogBox.InvokeRequired)
-                Invoke((Action<string>)Logboxout, new object[] { s });
+                Invoke((Action<string>) Logboxout, new object[] {s});
             else
-                LogBox.Text += s + Environment.NewLine;
+                LogBox.AppendText(s + Environment.NewLine);
         }
 
         public void HandleException(Exception ex)

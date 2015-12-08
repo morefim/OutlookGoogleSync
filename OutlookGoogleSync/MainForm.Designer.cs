@@ -57,6 +57,8 @@ namespace OutlookGoogleSync
             this.cbStartInTray = new System.Windows.Forms.CheckBox();
             this.cbCreateFiles = new System.Windows.Forms.CheckBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.tbSyncPeriod = new System.Windows.Forms.TextBox();
             this.cbShowBubbleTooltips = new System.Windows.Forms.CheckBox();
             this.cbSyncEvery = new System.Windows.Forms.CheckBox();
             this.bSave = new System.Windows.Forms.Button();
@@ -78,8 +80,6 @@ namespace OutlookGoogleSync
             this.sincNowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tbSyncPeriod = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -122,6 +122,7 @@ namespace OutlookGoogleSync
             this.LogBox.Multiline = true;
             this.LogBox.Name = "LogBox";
             this.LogBox.ReadOnly = true;
+            this.LogBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.LogBox.Size = new System.Drawing.Size(523, 374);
             this.LogBox.TabIndex = 1;
             // 
@@ -297,6 +298,22 @@ namespace OutlookGoogleSync
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Sync Regularly";
             // 
+            // label6
+            // 
+            this.label6.Location = new System.Drawing.Point(143, 24);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(89, 17);
+            this.label6.TabIndex = 9;
+            this.label6.Text = "minutes";
+            // 
+            // tbSyncPeriod
+            // 
+            this.tbSyncPeriod.Location = new System.Drawing.Point(98, 21);
+            this.tbSyncPeriod.Name = "tbSyncPeriod";
+            this.tbSyncPeriod.Size = new System.Drawing.Size(39, 20);
+            this.tbSyncPeriod.TabIndex = 8;
+            this.tbSyncPeriod.TextChanged += new System.EventHandler(this.tbSyncPeriod_TextChanged);
+            // 
             // cbShowBubbleTooltips
             // 
             this.cbShowBubbleTooltips.Location = new System.Drawing.Point(9, 49);
@@ -307,10 +324,10 @@ namespace OutlookGoogleSync
             this.cbShowBubbleTooltips.UseVisualStyleBackColor = true;
             this.cbShowBubbleTooltips.CheckedChanged += new System.EventHandler(this.CbShowBubbleTooltipsCheckedChanged);
             // 
-            // cbSyncEveryHour
+            // cbSyncEvery
             // 
             this.cbSyncEvery.Location = new System.Drawing.Point(9, 19);
-            this.cbSyncEvery.Name = "cbSyncEveryHour";
+            this.cbSyncEvery.Name = "cbSyncEvery";
             this.cbSyncEvery.Size = new System.Drawing.Size(83, 24);
             this.cbSyncEvery.TabIndex = 6;
             this.cbSyncEvery.Text = "Sync every:";
@@ -496,22 +513,6 @@ namespace OutlookGoogleSync
             this.exitToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
-            // 
-            // tbSyncPeriod
-            // 
-            this.tbSyncPeriod.Location = new System.Drawing.Point(98, 21);
-            this.tbSyncPeriod.Name = "tbSyncPeriod";
-            this.tbSyncPeriod.Size = new System.Drawing.Size(39, 20);
-            this.tbSyncPeriod.TabIndex = 8;
-            this.tbSyncPeriod.TextChanged += new System.EventHandler(this.tbSyncPeriod_TextChanged);
-            // 
-            // label6
-            // 
-            this.label6.Location = new System.Drawing.Point(143, 24);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(89, 17);
-            this.label6.TabIndex = 9;
-            this.label6.Text = "minutes";
             // 
             // MainForm
             // 

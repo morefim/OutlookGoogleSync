@@ -114,10 +114,10 @@ namespace OutlookGoogleSync
                     continue;
                 attendeesList.Add(new EventAttendee() { DisplayName = attendee, Email = email, Optional = optional });
             }
-            if (attendeesList.Count > 0)
+            if (attendeesList.Count > 0 && attendeesList.Count < 100)
                 return attendeesList;
 
-            return null;
+            return Enumerable.Empty<EventAttendee>().ToList();
         }
 
         public string EmailFromName(string attendee)

@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using DotNetOpenAuth.OAuth2;
+using Google;
 using Google.Apis.Authentication.OAuth2;
 using Google.Apis.Authentication.OAuth2.DotNetOpenAuth;
 using Google.Apis.Calendar.v3;
@@ -119,10 +122,33 @@ namespace OutlookGoogleSync
 
         public void addEntry(Event e)
         {
-            var result = service.Events.Insert(e, OGSSettings.Instance.UseGoogleCalendar.CalendarID).Fetch();
+            try
+            {
+                var result = service.Events.Insert(e, OGSSettings.Instance.UseGoogleCalendar.CalendarID).Fetch();
+            }
+            catch (GoogleApiRequestException ex)
+            {
+                const string error403Signature = @"Calendar usage limits exceeded.";
+                if (ex.RequestError.Code == 403 && ex.RequestError.Message == error403Signature)
+                    MoveAttendeesToDescriptionAndRetry(e);
+                else
+                    throw;
+            }
         }
-		
-		//returns the Google Time Format String of a given .Net DateTime value
+
+	    private void MoveAttendeesToDescriptionAndRetry(Event e)
+	    {
+            e.Description += "Attendees:\r\n";
+            foreach (var attendee in e.Attendees)
+                e.Description += attendee.DisplayName + "[" + attendee.Email + "]\r\n";
+
+            e.Attendees.Clear();
+	        e.Attendees = null;
+
+            var result = service.Events.Insert(e, OGSSettings.Instance.UseGoogleCalendar.CalendarID).Fetch();
+	    }
+
+	    //returns the Google Time Format String of a given .Net DateTime value
 		//Google Time Format = "2012-08-20T00:00:00+02:00"
 		public string GoogleTimeFrom(DateTime dt)
 		{

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Google.Apis.Calendar.v3.Data;
+using Google.Apis.Util;
 using Microsoft.Office.Interop.Outlook;
 
 namespace OutlookGoogleSync
@@ -66,29 +67,36 @@ namespace OutlookGoogleSync
                     _event.Description += Environment.NewLine;
                 if (ai.RequiredAttendees != null)
                 {
-                    _event.Description += Environment.NewLine + "REQUIRED: " + Environment.NewLine + SplitAttendees(ai.RequiredAttendees);
+                    _event.Description += Environment.NewLine + "REQUIRED:" + Environment.NewLine + SplitAttendees(ai.RequiredAttendees);
                 }
                 if (ai.OptionalAttendees != null)
                 {
-                    _event.Description += Environment.NewLine + "OPTIONAL: " + Environment.NewLine + SplitAttendees(ai.OptionalAttendees);
+                    _event.Description += Environment.NewLine + "OPTIONAL:" + Environment.NewLine + SplitAttendees(ai.OptionalAttendees);
                 }
             }
 
             if (ai.RequiredAttendees != null)
             {
-                _event.Attendees = AtendeesToList(ai.RequiredAttendees.Split(';'), false);
+                var attendees = AtendeesToList(ai.RequiredAttendees.Split(';'), false);
+                _event.Attendees = attendees.HavingEmail;
+
+                if (!attendees.HavingNoEmail.IsNullOrEmpty())
+                    _event.Description += Environment.NewLine + "REQUIRED(No Email):" + Environment.NewLine + attendees.HavingNoEmail.Aggregate((i, j) => i + Environment.NewLine + j);
             }
 
             if (ai.OptionalAttendees != null)
             {
                 var attendees = AtendeesToList(ai.OptionalAttendees.Split(';'), true);
                 if (_event.Attendees == null)
-                    _event.Attendees = attendees;
+                    _event.Attendees = attendees.HavingEmail;
                 else
                 {
-                    foreach (var attendee in attendees)
+                    foreach (var attendee in attendees.HavingEmail)
                         _event.Attendees.Add(attendee);
                 }
+
+                if (!attendees.HavingNoEmail.IsNullOrEmpty())
+                    _event.Description += Environment.NewLine + "OPTIONAL(No Email):" + Environment.NewLine + attendees.HavingNoEmail.Aggregate((i, j) => i + Environment.NewLine + j);
             }
 
             // set ID
@@ -97,20 +105,27 @@ namespace OutlookGoogleSync
             FixTime();
         }
 
-        public IList<EventAttendee> AtendeesToList(string[] attendees, bool optional)
+        public class Attendees
         {
-            var attendeesList = new List<EventAttendee>();
+            public IList<EventAttendee> HavingEmail = new List<EventAttendee>();
+            public IList<string> HavingNoEmail = new List<string>();
+        }
+
+        public Attendees AtendeesToList(string[] attendees, bool optional)
+        {
+            var attendeesList = new Attendees();
             foreach (var attendee in attendees)
             {
                 var email = EmailFromName(attendee);
                 if (email == null)
-                    continue;
-                attendeesList.Add(new EventAttendee() { DisplayName = attendee, Email = email, Optional = optional });
+                    attendeesList.HavingNoEmail.Add(attendee);
+                else
+                    attendeesList.HavingEmail.Add(new EventAttendee() { DisplayName = attendee, Email = email, Optional = optional });
             }
-            if (attendeesList.Count > 0 && attendeesList.Count < 100)
+            if (attendeesList.HavingEmail.Count > 0 && attendeesList.HavingEmail.Count < 100)
                 return attendeesList;
 
-            return Enumerable.Empty<EventAttendee>().ToList();
+            return attendeesList;
         }
 
         public string EmailFromName(string attendee)

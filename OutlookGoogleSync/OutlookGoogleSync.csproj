@@ -90,10 +90,6 @@
     <Reference Include="Google.Apis.Calendar.v3">
       <HintPath>lib\CalendarService\Google.Apis.Calendar.v3.dll</HintPath>
     </Reference>
-    <Reference Include="Interop.Redemption">
-      <HintPath>.\Interop.Redemption.dll</HintPath>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </Reference>
     <Reference Include="OUTLPIA">
       <HintPath>lib\OUTLPIA.DLL</HintPath>
     </Reference>

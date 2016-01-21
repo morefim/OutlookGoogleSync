@@ -16,15 +16,14 @@ namespace OutlookGoogleSync
         public event HandleExceptionDelegate OnExceptionDelegate;
         public event SyncDoneDelegate OnSyncDoneDelegate;
 
-        public async Task DoWork()
+        public async Task<bool> DoWork()
         {
             const int maxAttempts = 3;
             for (var attempt = 0; attempt < maxAttempts; attempt++)
             {
                 try
                 {
-                    PrivateDoWorkCallback();
-                    break;
+                    return await PrivateDoWorkCallback();
                 }
                 catch (Exception e)
                 {
@@ -32,15 +31,14 @@ namespace OutlookGoogleSync
                         OnExceptionDelegate(e);
                 }
             }
+
+            return await Task.FromResult(false);
         }
 
-        private void PrivateDoWorkCallback()
+        private async Task<bool> PrivateDoWorkCallback()
         {
             var syncStarted = DateTime.Now;
             var cbCreateFilesChecked = OGSSettings.Instance.CreateTextFiles;
-            var cbAddDescriptionChecked = OGSSettings.Instance.AddDescription;
-            var cbAddRemindersChecked = OGSSettings.Instance.AddReminders;
-            var cbAddAttendeesChecked = OGSSettings.Instance.AddAttendeesToDescription;
 
             OnLogboxOutDelegate("Sync started at " + syncStarted);
             OnLogboxOutDelegate("--------------------------------------------------");
@@ -136,6 +134,8 @@ namespace OutlookGoogleSync
             OnLogboxOutDelegate("Sync finished at " + syncFinished);
             OnLogboxOutDelegate("Time needed: " + elapsed.Minutes + " min " + elapsed.Seconds + " s");
             OnSyncDoneDelegate(googleEntriesToBeDeleted.Count, outlookEntriesToBeCreated.Count);
+
+            return await Task.FromResult(true);
         }
 
         public List<GoogleEvent> IdentifyGoogleEntriesToBeDeleted(List<GoogleEvent> outlook, List<GoogleEvent> google)

@@ -8,7 +8,7 @@ namespace OutlookGoogleSync
 {
     class GoogleEvent
     {
-        private Event _event;
+        private readonly Event _event;
 
         public Event Event { get { return _event; } }
 
@@ -19,12 +19,9 @@ namespace OutlookGoogleSync
             FixTime();
         }
 
-        public GoogleEvent(AppointmentItem ai)
+        public GoogleEvent(_AppointmentItem ai)
         {
-            _event = new Event();
-
-            _event.Start = new EventDateTime();
-            _event.End = new EventDateTime();
+            _event = new Event {Start = new EventDateTime(), End = new EventDateTime()};
 
             if (ai.AllDayEvent)
             {
@@ -47,13 +44,9 @@ namespace OutlookGoogleSync
             if (OGSSettings.Instance.AddReminders)
             {
                 //consider the reminder set in Outlook
-                _event.Reminders = new Event.RemindersData();
-                _event.Reminders.UseDefault = false;
-                var reminder = new EventReminder();
-                reminder.Method = "popup";
-                reminder.Minutes = ai.ReminderMinutesBeforeStart;
-                _event.Reminders.Overrides = new List<EventReminder>();
-                _event.Reminders.Overrides.Add(reminder);
+                _event.Reminders = new Event.RemindersData {UseDefault = false};
+                var reminder = new EventReminder {Method = "popup", Minutes = ai.ReminderSet ? ai.ReminderMinutesBeforeStart : 0};
+                _event.Reminders.Overrides = new List<EventReminder> {reminder};
             }
 
             if (ai.Organizer != null)
@@ -73,11 +66,11 @@ namespace OutlookGoogleSync
                     _event.Description += Environment.NewLine;
                 if (ai.RequiredAttendees != null)
                 {
-                    _event.Description += Environment.NewLine + "REQUIRED: " + Environment.NewLine + splitAttendees(ai.RequiredAttendees);
+                    _event.Description += Environment.NewLine + "REQUIRED: " + Environment.NewLine + SplitAttendees(ai.RequiredAttendees);
                 }
                 if (ai.OptionalAttendees != null)
                 {
-                    _event.Description += Environment.NewLine + "OPTIONAL: " + Environment.NewLine + splitAttendees(ai.OptionalAttendees);
+                    _event.Description += Environment.NewLine + "OPTIONAL: " + Environment.NewLine + SplitAttendees(ai.OptionalAttendees);
                 }
             }
 
@@ -137,7 +130,7 @@ namespace OutlookGoogleSync
         }
 
         //one attendee per line
-        public string splitAttendees(string attendees)
+        public string SplitAttendees(string attendees)
         {
             if (attendees == null) return "";
             var tmp1 = attendees.Split(';');
@@ -274,13 +267,13 @@ namespace OutlookGoogleSync
 
     class GoogleEventsList : List<GoogleEvent>
     {
-        public GoogleEventsList(List<Event> inList)
+        public GoogleEventsList(IEnumerable<Event> inList)
         {
             foreach (var item in inList)
                 Add(new GoogleEvent(item));
         }
 
-        public GoogleEventsList(List<AppointmentItem> inList)
+        public GoogleEventsList(IEnumerable<AppointmentItem> inList)
         {
             foreach (var item in inList)
                 Add(new GoogleEvent(item));

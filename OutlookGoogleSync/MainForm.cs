@@ -361,9 +361,9 @@ namespace OutlookGoogleSync
 
     public static class DateTimeExt
     {
-        public static DateTime RoundDown(this DateTime dateTime, int SyncPeriod)
+        public static DateTime RoundDown(this DateTime dateTime, int syncPeriod)
         {
-            return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, (dateTime.Minute / SyncPeriod) * SyncPeriod, 0);
+            return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, (dateTime.Minute / syncPeriod) * syncPeriod, 0);
         }
     }
 }

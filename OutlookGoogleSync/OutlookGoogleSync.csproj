@@ -127,6 +127,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <None Include="Lib\DotNetOpenAuth.LICENSE" />
+    <None Include="Lib\log4net.LICENSE" />
+    <None Include="Lib\Newtonsof.Json.LICENSE" />
     <None Include="RedemptionLoader.cs" />
     <Compile Include="RegexUtilities.cs" />
     <Compile Include="Settings.cs" />
@@ -175,6 +178,27 @@
     <Content Include="calendar.ico" />
     <Content Include="google.ico" />
     <Content Include="icon.ico" />
+    <Content Include="Lib\DotNetOpenAuth.dll" />
+    <Content Include="Lib\Google.Apis.Authentication.OAuth2.dll" />
+    <Content Include="Lib\Google.Apis.Authentication.OAuth2.pdb" />
+    <Content Include="Lib\Google.Apis.Authentication.OAuth2.xml" />
+    <Content Include="Lib\Google.Apis.dll" />
+    <Content Include="Lib\Google.Apis.pdb" />
+    <Content Include="Lib\Google.Apis.Silverlight.dll" />
+    <Content Include="Lib\Google.Apis.Silverlight.pdb" />
+    <Content Include="Lib\Google.Apis.Tools.CodeGen.dll" />
+    <Content Include="Lib\Google.Apis.Tools.CodeGen.pdb" />
+    <Content Include="Lib\Google.Apis.Tools.CodeGen.xml" />
+    <Content Include="Lib\Google.Apis.xml" />
+    <Content Include="Lib\log4net.dll" />
+    <Content Include="Lib\Newtonsoft.Json.Net35.dll" />
+    <Content Include="Lib\Newtonsoft.Json.Net35.xml" />
+    <Content Include="Lib\Newtonsoft.Json.Silverlight.dll" />
+    <Content Include="Lib\nunit.framework.dll" />
+    <Content Include="Lib\OUTLPIA.DLL" />
+    <Content Include="Lib\ServiceGenerator.exe" />
+    <Content Include="Lib\ServiceGenerator.pdb" />
+    <Content Include="Lib\ServiceGenerator.xml" />
     <Content Include="save.ico" />
     <None Include="sync.ico" />
   </ItemGroup>
@@ -200,6 +224,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.Targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

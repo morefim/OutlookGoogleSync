@@ -178,6 +178,9 @@
     <Content Include="calendar.ico" />
     <Content Include="google.ico" />
     <Content Include="icon.ico" />
+    <Content Include="Lib\CalendarService\Google.Apis.Calendar.v3.dll" />
+    <Content Include="Lib\CalendarService\Google.Apis.Calendar.v3.pdb" />
+    <Content Include="Lib\CalendarService\Google.Apis.Calendar.v3.xml" />
     <Content Include="Lib\DotNetOpenAuth.dll" />
     <Content Include="Lib\Google.Apis.Authentication.OAuth2.dll" />
     <Content Include="Lib\Google.Apis.Authentication.OAuth2.pdb" />

@@ -6,17 +6,17 @@ namespace OutlookGoogleSync
 {
     public class RegexUtilities
     {
-        bool invalid = false;
+        bool _invalid = false;
 
         public bool IsValidEmail(string strIn)
         {
-            invalid = false;
+            _invalid = false;
             if (String.IsNullOrEmpty(strIn))
                 return false;
 
             // Use IdnMapping class to convert Unicode domain names.
             strIn = Regex.Replace(strIn, @"(@)(.+)$", DomainMapper);
-            if (invalid)
+            if (_invalid)
                 return false;
 
             // Return true if strIn is in valid e-mail format.
@@ -38,7 +38,7 @@ namespace OutlookGoogleSync
             }
             catch (ArgumentException)
             {
-                invalid = true;
+                _invalid = true;
             }
             return match.Groups[1].Value + domainName;
         }

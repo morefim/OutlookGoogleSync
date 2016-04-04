@@ -8,14 +8,14 @@ namespace OutlookGoogleSync
     /// <summary>
     /// Exports or imports any object to/from XML.
     /// </summary>
-    public class XMLManager
+    public class XmlManager
     {       
         /// <summary>
         /// Exports any object given in "obj" to an xml file given in "filename"
         /// </summary>
         /// <param name="obj">The object that is to be serialized/exported to XML.</param>
         /// <param name="filename">The filename of the xml file to be written.</param>
-        public static void export(Object obj, string filename)
+        public static void Export(Object obj, string filename)
         {
             using (var writer = new XmlTextWriter(filename, null))
             {
@@ -30,7 +30,7 @@ namespace OutlookGoogleSync
         /// </summary>
         /// <param name="filename">The XML file from which to import.</param>
         /// <returns></returns>
-        public static T import<T>(string filename)
+        public static T Import<T>(string filename)
         {
             using (var fs = new FileStream(filename, FileMode.Open))
             {

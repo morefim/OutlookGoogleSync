@@ -18,8 +18,8 @@ namespace OutlookGoogleSync
                 return RegisterWindowMessage(message);
             }
 
-            public const int HWND_BROADCAST = 0xffff;
-            public const int SW_SHOWNORMAL = 1;
+            public const int HwndBroadcast = 0xffff;
+            public const int SwShownormal = 1;
 
             [DllImport("user32")]
             public static extern bool PostMessage(IntPtr hwnd, int msg, IntPtr wparam, IntPtr lparam);
@@ -32,7 +32,7 @@ namespace OutlookGoogleSync
 
             public static void ShowToFront(IntPtr window)
             {
-                ShowWindow(window, SW_SHOWNORMAL);
+                ShowWindow(window, SwShownormal);
                 SetForegroundWindow(window);
             }
         }
@@ -57,8 +57,8 @@ namespace OutlookGoogleSync
             }
         } 
 
-        public static readonly int WM_SHOWFIRSTINSTANCE = WinApi.RegisterWindowMessage("WM_SHOWFIRSTINSTANCE|{0}", ProgramInfo.AssemblyGuid);
-        static Mutex mutex;
+        public static readonly int WmShowfirstinstance = WinApi.RegisterWindowMessage("WM_SHOWFIRSTINSTANCE|{0}", ProgramInfo.AssemblyGuid);
+        static Mutex _mutex;
 
         static public bool Start()
         {
@@ -69,18 +69,18 @@ namespace OutlookGoogleSync
             // across ALL SESSIONS (multiple users & terminal services), then use the following line instead:
             // string mutexName = String.Format("Global\\{0}", ProgramInfo.AssemblyGuid);
 
-            mutex = new Mutex(true, mutexName, out onlyInstance);
+            _mutex = new Mutex(true, mutexName, out onlyInstance);
             return onlyInstance;
         }
 
         static public void ShowFirstInstance()
         {
-            WinApi.PostMessage((IntPtr)WinApi.HWND_BROADCAST, WM_SHOWFIRSTINSTANCE, IntPtr.Zero, IntPtr.Zero);
+            WinApi.PostMessage((IntPtr)WinApi.HwndBroadcast, WmShowfirstinstance, IntPtr.Zero, IntPtr.Zero);
         }
 
         static public void Stop()
         {
-            mutex.ReleaseMutex();
+            _mutex.ReleaseMutex();
         }
     }
 }

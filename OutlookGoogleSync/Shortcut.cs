@@ -25,45 +25,45 @@ namespace OutlookGoogleSync
         /// <summary>
         /// Create Windows Shorcut
         /// </summary>
-        /// <param name="SourceFile">A file you want to make shortcut to</param>
-        /// <param name="ShortcutFile">Path and shorcut file name including file extension (.lnk)</param>
-        public static void CreateShortcut(string SourceFile, string ShortcutFile)
+        /// <param name="sourceFile">A file you want to make shortcut to</param>
+        /// <param name="shortcutFile">Path and shorcut file name including file extension (.lnk)</param>
+        public static void CreateShortcut(string sourceFile, string shortcutFile)
         {
-            CreateShortcut(SourceFile, ShortcutFile, null, null, null, null);
+            CreateShortcut(sourceFile, shortcutFile, null, null, null, null);
         }
 
         /// <summary>
         /// Create Windows Shorcut
         /// </summary>
-        /// <param name="SourceFile">A file you want to make shortcut to</param>
-        /// <param name="ShortcutFile">Path and shorcut file name including file extension (.lnk)</param>
-        /// <param name="Description">Shortcut description</param>
-        /// <param name="Arguments">Command line arguments</param>
-        /// <param name="HotKey">Shortcut hot key as a string, for example "Ctrl+F"</param>
-        /// <param name="WorkingDirectory">"Start in" shorcut parameter</param>
-        public static void CreateShortcut(string SourceFile, string ShortcutFile, string Description, string Arguments, string HotKey, string WorkingDirectory)
+        /// <param name="sourceFile">A file you want to make shortcut to</param>
+        /// <param name="shortcutFile">Path and shorcut file name including file extension (.lnk)</param>
+        /// <param name="description">Shortcut description</param>
+        /// <param name="arguments">Command line arguments</param>
+        /// <param name="hotKey">Shortcut hot key as a string, for example "Ctrl+F"</param>
+        /// <param name="workingDirectory">"Start in" shorcut parameter</param>
+        public static void CreateShortcut(string sourceFile, string shortcutFile, string description, string arguments, string hotKey, string workingDirectory)
         {
             // Check necessary parameters first:
-            if (String.IsNullOrEmpty(SourceFile))
-                throw new ArgumentNullException("SourceFile");
-            if (String.IsNullOrEmpty(ShortcutFile))
-                throw new ArgumentNullException("ShortcutFile");
+            if (String.IsNullOrEmpty(sourceFile))
+                throw new ArgumentNullException("sourceFile");
+            if (String.IsNullOrEmpty(shortcutFile))
+                throw new ArgumentNullException("shortcutFile");
 
             // Create WshShellClass instance:
             var wshShell = new WshShellClass();
 
             // Create shortcut object:
-            var shorcut = (IWshShortcut)wshShell.CreateShortcut(ShortcutFile);
+            var shorcut = (IWshShortcut)wshShell.CreateShortcut(shortcutFile);
 
             // Assign shortcut properties:
-            shorcut.TargetPath = SourceFile;
-            shorcut.Description = Description;
-            if (!String.IsNullOrEmpty(Arguments))
-                shorcut.Arguments = Arguments;
-            if (!String.IsNullOrEmpty(HotKey))
-                shorcut.Hotkey = HotKey;
-            if (!String.IsNullOrEmpty(WorkingDirectory))
-                shorcut.WorkingDirectory = WorkingDirectory;
+            shorcut.TargetPath = sourceFile;
+            shorcut.Description = description;
+            if (!String.IsNullOrEmpty(arguments))
+                shorcut.Arguments = arguments;
+            if (!String.IsNullOrEmpty(hotKey))
+                shorcut.Hotkey = hotKey;
+            if (!String.IsNullOrEmpty(workingDirectory))
+                shorcut.WorkingDirectory = workingDirectory;
 
             // Save the shortcut:
             shorcut.Save();

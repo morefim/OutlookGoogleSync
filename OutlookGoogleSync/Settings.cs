@@ -8,23 +8,23 @@ namespace OutlookGoogleSync
     /// Description of Settings.
     /// </summary>
     [Serializable, XmlRoot("Settings")]
-    public class OGSSettings
+    public class OgsSettings
     {
         [XmlIgnore]
-        private static OGSSettings instance;
+        private static OgsSettings _instance;
 
         [XmlIgnore]
-        public static OGSSettings Instance
+        public static OgsSettings Instance
         {
             get 
             {
-                if (instance == null)
-                    instance = new OGSSettings();
-                return instance;
+                if (_instance == null)
+                    _instance = new OgsSettings();
+                return _instance;
             }
             set
             {
-                instance = value;            
+                _instance = value;            
             }          
         }
 
@@ -68,7 +68,7 @@ namespace OutlookGoogleSync
         public int DaysInTheFuture = 7;
 
         [OptionalField(VersionAdded = 2)]
-        public OGSCalendarListEntry UseGoogleCalendar = new OGSCalendarListEntry();
+        public OgsCalendarListEntry UseGoogleCalendar = new OgsCalendarListEntry();
 
 
         [OptionalField(VersionAdded = 3)]

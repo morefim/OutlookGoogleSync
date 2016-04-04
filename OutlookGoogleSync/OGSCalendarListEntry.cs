@@ -5,23 +5,23 @@ namespace OutlookGoogleSync
     /// <summary>
     /// Description of MyCalendarListEntry.
     /// </summary>
-    public class OGSCalendarListEntry
+    public class OgsCalendarListEntry
     {
-        public string ID = "";
+        public string Id = "";
 
         public string Name = "";
 
-        public bool IsEmpty { get { return ID == ""; } }
+        public bool IsEmpty { get { return Id == ""; } }
 
-        public string CalendarID { get { return Coder.Decrypt(ID); } }
+        public string CalendarId { get { return Coder.Decrypt(Id); } }
 
-        public OGSCalendarListEntry()
+        public OgsCalendarListEntry()
         {
         }
         
-        public OGSCalendarListEntry(CalendarListEntry init)
+        public OgsCalendarListEntry(CalendarListEntry init)
         {
-            ID = Coder.Encrypt(init.Id);
+            Id = Coder.Encrypt(init.Id);
             Name = Coder.Encrypt(init.Summary);
         }
         

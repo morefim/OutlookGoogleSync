@@ -1,7 +1,7 @@
 ﻿//TODO: consider description updates?
 //TODO: optimize comparison algorithms
 using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
@@ -41,47 +41,48 @@ namespace OutlookGoogleSync
             try
             {
                 if (File.Exists(Filename))
-                    OGSSettings.Instance = XMLManager.import<OGSSettings>(Filename);
+                    OgsSettings.Instance = XmlManager.Import<OgsSettings>(Filename);
                 else
-                    XMLManager.export(OGSSettings.Instance, Filename);
+                    XmlManager.Export(OgsSettings.Instance, Filename);
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(e.Message, @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             //update GUI from Settings
-            tbDaysInThePast.Text = OGSSettings.Instance.DaysInThePast.ToString();
-            tbDaysInTheFuture.Text = OGSSettings.Instance.DaysInTheFuture.ToString();
-            cbCalendars.Items.Add(OGSSettings.Instance.UseGoogleCalendar);
+            tbDaysInThePast.Text = OgsSettings.Instance.DaysInThePast.ToString();
+            tbDaysInTheFuture.Text = OgsSettings.Instance.DaysInTheFuture.ToString();
+            cbCalendars.Items.Add(OgsSettings.Instance.UseGoogleCalendar);
             cbCalendars.SelectedIndex = 0;
-            cbSyncEvery.Checked = OGSSettings.Instance.SyncEvery;
-            tbSyncPeriod.Text = OGSSettings.Instance.SyncPeriod.ToString();
-            cbShowBubbleTooltips.Checked = OGSSettings.Instance.ShowBubbleTooltipWhenSyncing;
-            cbStartInTray.Checked = OGSSettings.Instance.StartInTray;
-            cbMinimizeToTray.Checked = OGSSettings.Instance.MinimizeToTray;
-            cbAddDescription.Checked = OGSSettings.Instance.AddDescription;
-            cbAddAttendees.Checked = OGSSettings.Instance.AddAttendeesToDescription;
-            cbAddReminders.Checked = OGSSettings.Instance.AddReminders;
-            cbCreateFiles.Checked = OGSSettings.Instance.CreateTextFiles;
-            cbStartWithWindows.Checked = OGSSettings.Instance.Autostart;
-            tbOutlookUser.Text = OGSSettings.Instance.User;
-            tbOutlookPassword.Text = OGSSettings.Instance.OutlookPassword;
+            cbSyncEvery.Checked = OgsSettings.Instance.SyncEvery;
+            tbSyncPeriod.Text = OgsSettings.Instance.SyncPeriod.ToString();
+            cbShowBubbleTooltips.Checked = OgsSettings.Instance.ShowBubbleTooltipWhenSyncing;
+            cbStartInTray.Checked = OgsSettings.Instance.StartInTray;
+            cbMinimizeToTray.Checked = OgsSettings.Instance.MinimizeToTray;
+            cbAddDescription.Checked = OgsSettings.Instance.AddDescription;
+            cbAddAttendees.Checked = OgsSettings.Instance.AddAttendeesToDescription;
+            cbAddReminders.Checked = OgsSettings.Instance.AddReminders;
+            cbCreateFiles.Checked = OgsSettings.Instance.CreateTextFiles;
+            cbStartWithWindows.Checked = OgsSettings.Instance.Autostart;
+            tbOutlookUser.Text = OgsSettings.Instance.User;
+            tbOutlookPassword.Text = OgsSettings.Instance.OutlookPassword;
             tbOutlookPassword.PasswordChar = '*';
 
             //set up timer (every 30s) for checking the minute offsets
-            Ogstimer = new Timer();
-            Ogstimer.Interval = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
-            Ogstimer.Tick += new EventHandler(ogstimer_Tick);
+            Ogstimer = new Timer {Interval = (int) TimeSpan.FromSeconds(30).TotalMilliseconds};
+            Ogstimer.Tick += ogstimer_Tick;
             Ogstimer.Start();
-            Oldtime = DateTime.Now.RoundDown(OGSSettings.Instance.SyncPeriod);
+            Oldtime = DateTime.Now.RoundDown(OgsSettings.Instance.SyncPeriod);
 
             //set up tooltips for some controls
-            var toolTip1 = new ToolTip();
-            toolTip1.AutoPopDelay = 10000;
-            toolTip1.InitialDelay = 500;
-            toolTip1.ReshowDelay = 200;
-            toolTip1.ShowAlways = true;
+            var toolTip1 = new ToolTip
+            {
+                AutoPopDelay = 10000,
+                InitialDelay = 500,
+                ReshowDelay = 200,
+                ShowAlways = true
+            };
             toolTip1.SetToolTip(cbCalendars,
                 "The Google Calendar to synchonize with.");
             toolTip1.SetToolTip(cbAddAttendees,
@@ -115,7 +116,7 @@ namespace OutlookGoogleSync
             if (!cbSyncEvery.Checked) return;
 
             var newtime = DateTime.Now;
-            if ((newtime - Oldtime) < new TimeSpan(0, OGSSettings.Instance.SyncPeriod, 0)) 
+            if ((newtime - Oldtime) < new TimeSpan(0, OgsSettings.Instance.SyncPeriod, 0)) 
                 return;
 
             Oldtime = newtime;
@@ -126,8 +127,8 @@ namespace OutlookGoogleSync
         {
             if (cbShowBubbleTooltips.Checked)
             {
-                notifyIcon.BalloonTipTitle = "Outlook Google Sync";
-                notifyIcon.BalloonTipText = "Syncronization complete";
+                notifyIcon.BalloonTipTitle = @"Outlook Google Sync";
+                notifyIcon.BalloonTipText = @"Syncronization complete";
                 if (created > 0)
                     notifyIcon.BalloonTipText += string.Format(", {0} created", created);
                 if (deleted > 0)
@@ -143,7 +144,7 @@ namespace OutlookGoogleSync
             bGetMyCalendars.Enabled = false;
             cbCalendars.Enabled = false;
 
-            var calendars = GoogleCalendar.Instance.getCalendars();
+            var calendars = GoogleCalendar.Instance.GetCalendars();
             if (calendars != null)
             {
                 cbCalendars.Items.Clear();
@@ -160,9 +161,9 @@ namespace OutlookGoogleSync
 
         async void SyncNow_Click(object sender, EventArgs e)
         {
-            if (OGSSettings.Instance.UseGoogleCalendar.IsEmpty)
+            if (OgsSettings.Instance.UseGoogleCalendar.IsEmpty)
             {
-                MessageBox.Show("You need to select a Google Calendar first on the 'Settings' tab.");
+                MessageBox.Show(@"You need to select a Google Calendar first on the 'Settings' tab.");
                 return;
             }
 
@@ -195,8 +196,8 @@ namespace OutlookGoogleSync
                 {
                     if (cbShowBubbleTooltips.Checked)
                     {
-                        notifyIcon.BalloonTipTitle = "Outlook Google Sync";
-                        notifyIcon.BalloonTipText = "Exception: " + ex.Message;
+                        notifyIcon.BalloonTipTitle = @"Outlook Google Sync";
+                        notifyIcon.BalloonTipText = @"Exception: " + ex.Message;
                         notifyIcon.BalloonTipIcon = ToolTipIcon.Error;
                         notifyIcon.Text = ("OGS: " + notifyIcon.BalloonTipText).Truncate(63);
                         notifyIcon.ShowBalloonTip(500);
@@ -209,90 +210,93 @@ namespace OutlookGoogleSync
                         tw.Close();
                     }
                 }
-                catch { }
+                catch (Exception e)
+                {
+                    Debug.Fail(e.Message);
+                }
             }
         }
 
         void Save_Click(object sender, EventArgs e)
         {
-            XMLManager.export(OGSSettings.Instance, Filename);
+            XmlManager.Export(OgsSettings.Instance, Filename);
         }
 
         private void tbSyncPeriod_TextChanged(object sender, EventArgs e)
         {
-            int.TryParse(tbSyncPeriod.Text, out OGSSettings.Instance.SyncPeriod);
-            if (OGSSettings.Instance.SyncPeriod < 1)
-                OGSSettings.Instance.SyncPeriod = 1;
+            int.TryParse(tbSyncPeriod.Text, out OgsSettings.Instance.SyncPeriod);
+            if (OgsSettings.Instance.SyncPeriod < 1)
+                OgsSettings.Instance.SyncPeriod = 1;
         }
 
         private void tbOutlookUser_TextChanged(object sender, EventArgs e)
         {
-            OGSSettings.Instance.User = tbOutlookUser.Text;
+            OgsSettings.Instance.User = tbOutlookUser.Text;
         }
 
         private void tbOutlookPassword_TextChanged(object sender, EventArgs e)
         {
-            OGSSettings.Instance.Password = Coder.Encrypt(tbOutlookPassword.Text);
+            OgsSettings.Instance.Password = Coder.Encrypt(tbOutlookPassword.Text);
         }
 
         void ComboBox1SelectedIndexChanged(object sender, EventArgs e)
         {
-            OGSSettings.Instance.UseGoogleCalendar = (OGSCalendarListEntry)cbCalendars.SelectedItem;
+            OgsSettings.Instance.UseGoogleCalendar = (OgsCalendarListEntry)cbCalendars.SelectedItem;
         }
 
         void TbDaysInThePastTextChanged(object sender, EventArgs e)
         {
-            OGSSettings.Instance.DaysInThePast = int.Parse(tbDaysInThePast.Text);
+            OgsSettings.Instance.DaysInThePast = int.Parse(tbDaysInThePast.Text);
         }
 
         void TbDaysInTheFutureTextChanged(object sender, EventArgs e)
         {
-            OGSSettings.Instance.DaysInTheFuture = int.Parse(tbDaysInTheFuture.Text);
+            OgsSettings.Instance.DaysInTheFuture = int.Parse(tbDaysInTheFuture.Text);
         }
 
         void CbSyncEveryHourCheckedChanged(object sender, EventArgs e)
         {
-            OGSSettings.Instance.SyncEvery = cbSyncEvery.Checked;
+            OgsSettings.Instance.SyncEvery = cbSyncEvery.Checked;
         }
 
         void CbShowBubbleTooltipsCheckedChanged(object sender, EventArgs e)
         {
-            OGSSettings.Instance.ShowBubbleTooltipWhenSyncing = cbShowBubbleTooltips.Checked;
+            OgsSettings.Instance.ShowBubbleTooltipWhenSyncing = cbShowBubbleTooltips.Checked;
         }
 
         void CbStartInTrayCheckedChanged(object sender, EventArgs e)
         {
-            OGSSettings.Instance.StartInTray = cbStartInTray.Checked;
+            OgsSettings.Instance.StartInTray = cbStartInTray.Checked;
         }
 
         void CbMinimizeToTrayCheckedChanged(object sender, EventArgs e)
         {
-            OGSSettings.Instance.MinimizeToTray = cbMinimizeToTray.Checked;
+            OgsSettings.Instance.MinimizeToTray = cbMinimizeToTray.Checked;
         }
 
         void CbAddDescriptionCheckedChanged(object sender, EventArgs e)
         {
-            OGSSettings.Instance.AddDescription = cbAddDescription.Checked;
+            OgsSettings.Instance.AddDescription = cbAddDescription.Checked;
         }
 
         void CbAddRemindersCheckedChanged(object sender, EventArgs e)
         {
-            OGSSettings.Instance.AddReminders = cbAddReminders.Checked;
+            OgsSettings.Instance.AddReminders = cbAddReminders.Checked;
         }
 
         void cbAddAttendees_CheckedChanged(object sender, EventArgs e)
         {
-            OGSSettings.Instance.AddAttendeesToDescription = cbAddAttendees.Checked;
+            OgsSettings.Instance.AddAttendeesToDescription = cbAddAttendees.Checked;
         }
 
         void cbCreateFiles_CheckedChanged(object sender, EventArgs e)
         {
-            OGSSettings.Instance.CreateTextFiles = cbCreateFiles.Checked;
+            OgsSettings.Instance.CreateTextFiles = cbCreateFiles.Checked;
         }
 
         private void cbStartWithWindows_CheckedChanged(object sender, EventArgs e)
         {
-            OGSSettings.Instance.Autostart = cbStartWithWindows.Checked;
+            OgsSettings.Instance.Autostart = cbStartWithWindows.Checked;
         }
 
         void NotifyIconDoubleClick(object sender, EventArgs e)

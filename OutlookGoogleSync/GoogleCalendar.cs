@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Windows.Forms;
-using DotNetOpenAuth.OAuth2;
+using System.Threading;
 using Google;
-using Google.Apis.Authentication.OAuth2;
-using Google.Apis.Authentication.OAuth2.DotNetOpenAuth;
+using Google.Apis.Auth.OAuth2;
 using Google.Apis.Calendar.v3;
 using Google.Apis.Calendar.v3.Data;
-using Google.Apis.Util;
+using Google.Apis.Services;
+using Google.Apis.Util.Store;
 
 
 namespace OutlookGoogleSync
@@ -20,94 +17,70 @@ namespace OutlookGoogleSync
 	/// </summary>
 	public class GoogleCalendar
 	{
-	    private static GoogleCalendar instance;
+        private const string ApplicationName = "Outlook Google Calendar Sync Engine";
+        /// <summary>
+        /// From Google Developer console https://console.developers.google.com
+        /// </summary>
+        private const string ClientId = "662204240419.apps.googleusercontent.com";
+        /// <summary>
+        /// From Google Developer console https://console.developers.google.com
+        /// </summary>
+        private const string ClientSecret = "4nJPnk5fE8yJM_HNUNQEEvjU";
+        /// <summary>
+        /// A string used to identify a user.
+        /// </summary>
+        private const string UserName = "user";
+
+	    readonly CalendarService _service;
+
+	    private static GoogleCalendar _instance;
 
         public static GoogleCalendar Instance
         {
-            get 
-            {
-                if (instance == null) instance = new GoogleCalendar();
-                return instance;
-            }
+            get { return _instance ?? (_instance = new GoogleCalendar()); }
         }
-        
-	    CalendarService service;
+
+        private static readonly string[] Scopes = 
+        { 
+            CalendarService.Scope.Calendar, // Manage your calendars
+            CalendarService.Scope.CalendarReadonly // View your Calendars 
+        };
 	    
 		public GoogleCalendar()
 		{
-            var provider = new NativeApplicationClient(GoogleAuthenticationServer.Description);
-            provider.ClientIdentifier = "662204240419.apps.googleusercontent.com";
-            provider.ClientSecret = "4nJPnk5fE8yJM_HNUNQEEvjU";
-            service = new CalendarService(new OAuth2Authenticator<NativeApplicationClient>(provider, GetAuthentication));
-            service.Key = "AIzaSyDRGFSAyMGondZKR8fww1RtRARYtCbBC4k";
+            // here is where we Request the user to give us access, or use the Refresh Token that was previously stored in %AppData%
+            var clientSecrets = new ClientSecrets
+            {
+                ClientId = ClientId,
+                ClientSecret = ClientSecret
+            };
+            var fileDataStore = new FileDataStore("GoogleSyncEngine.Auth.Store");
+
+            var credential = AsyncHelpers.RunSync(() => GoogleWebAuthorizationBroker.AuthorizeAsync(clientSecrets, Scopes, UserName, CancellationToken.None, fileDataStore));
+
+            // Create the service.
+            _service = new CalendarService(new BaseClientService.Initializer
+            {
+                HttpClientInitializer = credential,
+                ApplicationName = ApplicationName,
+            });
 		}
-				
-		private static IAuthorizationState GetAuthentication(NativeApplicationClient arg)
-        {
-            // Get the auth URL:
-            IAuthorizationState state = new AuthorizationState(new[] { CalendarService.Scopes.Calendar.GetStringValue() });
-            state.Callback = new Uri(NativeApplicationClient.OutOfBandCallbackUrl);
-            state.RefreshToken = Coder.Decrypt(OGSSettings.Instance.RefreshToken);
-            var authUri = arg.RequestUserAuthorization(state);
-            
-            IAuthorizationState result = null;
-            
-		    if (state.RefreshToken == "")
-		    {
-                // Request authorization from the user (by opening a browser window):
-                Process.Start(authUri.ToString());
-                
-                var eac = new EnterAuthorizationCode();
-                if (eac.ShowDialog(MainForm.Instance) == DialogResult.OK)
-                {
-                    // Retrieve the access/refresh tokens by using the authorization code:
-                    result = arg.ProcessUserAuthorization(eac.authcode, state);
-                    
-                    //save the refresh token for future use
-                    OGSSettings.Instance.RefreshToken = Coder.Encrypt(result.RefreshToken);
-                    XMLManager.export(OGSSettings.Instance, MainForm.Filename);
-                    
-                    return result;
-                } 
-                else 
-                {
-                    return null;
-                }		        
-		    } 
-            else 
-            {
-		        arg.RefreshToken(state, null);
-		        result = state;
-		        return result;
-		    }
-        
-        }
 
-        public List<OGSCalendarListEntry> getCalendars()
+        public List<OgsCalendarListEntry> GetCalendars()
         {
-            var request = service.CalendarList.List().Fetch();            
-            if (request != null)
-            {
-
-                var result = new List<OGSCalendarListEntry>();
-                foreach (var cle in request.Items)
-                {
-                    result.Add(new OGSCalendarListEntry(cle));
-                }
-                return result;
-            }
-            return null;
+            CalendarList request = _service.CalendarList.List().Execute();          
+            return request != null ? request.Items.Select(cle => new OgsCalendarListEntry(cle)).ToList() : null;
         }
 		
-        public List<Event> getCalendarEntriesInRange()
+        public List<Event> GetCalendarEntriesInRange()
         {
             var result = new List<Event>();
-            var lr = service.Events.List(OGSSettings.Instance.UseGoogleCalendar.CalendarID);
+            var lr = _service.Events.List(OgsSettings.Instance.UseGoogleCalendar.CalendarId);
 
-            lr.TimeMin = GoogleTimeFrom(DateTime.Now.AddDays(-OGSSettings.Instance.DaysInThePast));
-            lr.TimeMax = GoogleTimeFrom(DateTime.Now.AddDays(+OGSSettings.Instance.DaysInTheFuture + 1));
+            lr.TimeMin = DateTime.Now.AddDays(-OgsSettings.Instance.DaysInThePast);
+            lr.TimeMax = DateTime.Now.AddDays(+OgsSettings.Instance.DaysInTheFuture + 1);
 
-            var request = lr.Fetch();
+            var request = lr.Execute();
             if (request != null && request.Items != null)
             {
                 result.AddRange(request.Items);
@@ -115,21 +88,21 @@ namespace OutlookGoogleSync
             return result;
         }
 
-        public void deleteCalendarEntry(Event e)
+        public void DeleteCalendarEntry(Event e)
         {
-            var request = service.Events.Delete(OGSSettings.Instance.UseGoogleCalendar.CalendarID, e.Id).Fetch();
+            _service.Events.Delete(OgsSettings.Instance.UseGoogleCalendar.CalendarId, e.Id).Execute();
         }
 
-        public void addEntry(Event e)
+        public void AddEntry(Event e)
         {
             try
             {
-                var result = service.Events.Insert(e, OGSSettings.Instance.UseGoogleCalendar.CalendarID).Fetch();
+                _service.Events.Insert(e, OgsSettings.Instance.UseGoogleCalendar.CalendarId).Execute();
             }
-            catch (GoogleApiRequestException ex)
+            catch (GoogleApiException ex)
             {
                 const string error403Signature = @"Calendar usage limits exceeded.";
-                if (ex.RequestError.Code == 403 && ex.RequestError.Message == error403Signature)
+                if (ex.Error.Code == 403 && ex.Error.Message == error403Signature)
                     MoveAttendeesToDescriptionAndRetry(e);
                 else
                     throw;
@@ -145,19 +118,7 @@ namespace OutlookGoogleSync
             e.Attendees.Clear();
 	        e.Attendees = null;
 
-            var result = service.Events.Insert(e, OGSSettings.Instance.UseGoogleCalendar.CalendarID).Fetch();
-	    }
-
-	    //returns the Google Time Format String of a given .Net DateTime value
-		//Google Time Format = "2012-08-20T00:00:00+02:00"
-		public string GoogleTimeFrom(DateTime dt)
-		{
-            var timezone = TimeZoneInfo.Local.GetUtcOffset(dt).ToString();
-            if (timezone[0] != '-') timezone = '+' + timezone;
-            timezone = timezone.Substring(0,6);
-            
-            var result = dt.GetDateTimeFormats('s')[0] + timezone;
-            return result;
-		}		
+	        _service.Events.Insert(e, OgsSettings.Instance.UseGoogleCalendar.CalendarId).Execute();
+	    }				
 	}
 }

@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Google.Apis.Calendar.v3.Data;
-using Google.Apis.Util;
 using Microsoft.Office.Interop.Outlook;
+using TimeZone = System.TimeZone;
 
 namespace OutlookGoogleSync
 {
@@ -30,19 +30,19 @@ namespace OutlookGoogleSync
             }
             else
             {
-                _event.Start.DateTime = GoogleCalendar.Instance.GoogleTimeFrom(ai.Start);
-                _event.End.DateTime = GoogleCalendar.Instance.GoogleTimeFrom(ai.End);
+                _event.Start.DateTime = ai.Start;
+                _event.End.DateTime = ai.End;
             }
 
             _event.Summary = ai.Subject;
             _event.Location = ai.Location;
 
-            if (OGSSettings.Instance.AddDescription)
+            if (OgsSettings.Instance.AddDescription)
             {
                 _event.Description = ai.Body;
             }
 
-            if (OGSSettings.Instance.AddReminders)
+            if (OgsSettings.Instance.AddReminders)
             {
                 //consider the reminder set in Outlook
                 _event.Reminders = new Event.RemindersData {UseDefault = false};
@@ -61,7 +61,7 @@ namespace OutlookGoogleSync
                     _event.Description += " [" + organizer + "]";
             }
 
-            if (OGSSettings.Instance.AddAttendeesToDescription)
+            if (OgsSettings.Instance.AddAttendeesToDescription)
             {
                 if (_event.Description != null)
                     _event.Description += Environment.NewLine;
@@ -80,7 +80,7 @@ namespace OutlookGoogleSync
                 var attendees = AtendeesToList(ai.RequiredAttendees.Split(';'), false);
                 _event.Attendees = attendees.HavingEmail;
 
-                if (!attendees.HavingNoEmail.IsNullOrEmpty())
+                if (attendees.HavingNoEmail.Any())
                     _event.Description += Environment.NewLine + "REQUIRED(No Email):" + Environment.NewLine + attendees.HavingNoEmail.Aggregate((i, j) => i + Environment.NewLine + j);
             }
 
@@ -95,7 +95,7 @@ namespace OutlookGoogleSync
                         _event.Attendees.Add(attendee);
                 }
 
-                if (!attendees.HavingNoEmail.IsNullOrEmpty())
+                if (attendees.HavingNoEmail.Any())
                     _event.Description += Environment.NewLine + "OPTIONAL(No Email):" + Environment.NewLine + attendees.HavingNoEmail.Aggregate((i, j) => i + Environment.NewLine + j);
             }
 
@@ -120,7 +120,7 @@ namespace OutlookGoogleSync
                 if (email == null)
                     attendeesList.HavingNoEmail.Add(attendee);
                 else
-                    attendeesList.HavingEmail.Add(new EventAttendee() { DisplayName = attendee, Email = email, Optional = optional });
+                    attendeesList.HavingEmail.Add(new EventAttendee { DisplayName = attendee, Email = email, Optional = optional });
             }
             if (attendeesList.HavingEmail.Count > 0 && attendeesList.HavingEmail.Count < 100)
                 return attendeesList;
@@ -136,12 +136,9 @@ namespace OutlookGoogleSync
                 return attendee;
 
             var name = attendee.Split(',');
-            if (name.Count() == 2)
-            {
-                var email = name[1].ToLower().Trim() + "." + name[0].ToLower().Trim() + "@kla-tencor.com";                
-                return regex.IsValidEmail(email) ? email : null;
-            }
-            return null;
+            if (name.Length != 2) return null;
+            var email = name[1].ToLower().Trim() + "." + name[0].ToLower().Trim() + "@kla-tencor.com";                
+            return regex.IsValidEmail(email) ? email : null;
         }
 
         //one attendee per line
@@ -161,10 +158,10 @@ namespace OutlookGoogleSync
                 return outString;
 
             if (_event.Start != null && _event.Start.DateTime != null)
-                outString += _event.Start.DateTime.Trim() + "; ";
+                outString += _event.Start.DateTime + "; ";
 
             if (_event.End != null && _event.End.DateTime != null)
-                outString += _event.End.DateTime.Trim() + "; ";
+                outString += _event.End.DateTime + "; ";
 
             if (_event.Summary != null)
                 outString += _event.Summary.Trim() + "; ";
@@ -172,7 +169,7 @@ namespace OutlookGoogleSync
             if (_event.Location != null)
                 outString += _event.Location.Trim() + "; ";
 
-            if (OGSSettings.Instance.AddAttendeesToDescription)
+            if (OgsSettings.Instance.AddAttendeesToDescription)
             {
                 if (_event.Description != null)
                     outString += _event.Description.Trim() + "; ";
@@ -184,10 +181,10 @@ namespace OutlookGoogleSync
         public void FixTime()
         {
             if (_event.Start.DateTime == null)
-                _event.Start.DateTime = GoogleCalendar.Instance.GoogleTimeFrom(DateTime.Parse(_event.Start.Date));
+                _event.Start.DateTime = DateTime.Parse(_event.Start.Date);
 
             if (_event.End.DateTime == null)
-                _event.End.DateTime = GoogleCalendar.Instance.GoogleTimeFrom(DateTime.Parse(_event.End.Date));
+                _event.End.DateTime = DateTime.Parse(_event.End.Date);
         }
 
         public void FixFullDayTime(DateTime start, DateTime end)
@@ -203,14 +200,14 @@ namespace OutlookGoogleSync
             endTimeString = endTimeString.Replace(fractPart, string.Empty);
             startTimeString = startTimeString.Replace(fractPart, string.Empty);
 
-            _event.Start = new EventDateTime()
+            _event.Start = new EventDateTime
             {
-                DateTime = startTimeString
+                DateTime = DateTime.Parse(startTimeString)
             };
 
-            _event.End = new EventDateTime()
+            _event.End = new EventDateTime
             {
-                DateTime = endTimeString
+                DateTime = DateTime.Parse(endTimeString)
             };
         }
 
@@ -224,10 +221,10 @@ namespace OutlookGoogleSync
             }
 
             // Return true if the fields match:
-            if (!string.Equals(_event.Start.DateTime, p._event.Start.DateTime, StringComparison.InvariantCultureIgnoreCase))
+            if (!_event.Start.DateTime.Equals(p._event.Start.DateTime))
                 return false;
 
-            if (!string.Equals(_event.End.DateTime, p._event.End.DateTime, StringComparison.InvariantCultureIgnoreCase))
+            if (!_event.End.DateTime.Equals(p._event.End.DateTime))
                 return false;
 
             if (!string.Equals(_event.Summary, p._event.Summary, StringComparison.InvariantCultureIgnoreCase))
@@ -236,7 +233,7 @@ namespace OutlookGoogleSync
             if (!string.Equals(_event.Location, p._event.Location, StringComparison.InvariantCultureIgnoreCase))
                 return false;
 
-            if (OGSSettings.Instance.AddAttendeesToDescription)
+            if (OgsSettings.Instance.AddAttendeesToDescription)
             {
                 if (!string.Equals(_event.Description, p._event.Description, StringComparison.InvariantCultureIgnoreCase))
                     return false;
@@ -253,6 +250,7 @@ namespace OutlookGoogleSync
 
         public override int GetHashCode()
         {
+            // ReSharper disable once BaseObjectGetHashCodeCallInGetHashCode
             return base.GetHashCode();
         }
 
@@ -280,7 +278,7 @@ namespace OutlookGoogleSync
         }
     }
 
-    class GoogleEventsList : List<GoogleEvent>
+    internal class GoogleEventsList : List<GoogleEvent>
     {
         public GoogleEventsList(IEnumerable<Event> inList)
         {

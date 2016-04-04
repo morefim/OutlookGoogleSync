@@ -12,7 +12,7 @@ namespace OutlookGoogleSync
     /// </summary>
     public class OutlookCalendar
     {
-	    private static OutlookCalendar instance;
+	    private static OutlookCalendar _instance;
 
         public static OutlookCalendar Instance
         {
@@ -20,17 +20,17 @@ namespace OutlookGoogleSync
             {
                 try
                 {
-                    if (instance == null || !Marshal.IsComObject(instance.UseOutlookCalendar))
-                        instance = null;
+                    if (_instance == null || !Marshal.IsComObject(_instance.UseOutlookCalendar))
+                        _instance = null;
 
-                    if (instance == null)
-                        instance = new OutlookCalendar();
+                    if (_instance == null)
+                        _instance = new OutlookCalendar();
 
-                    return instance;
+                    return _instance;
                 }
                 finally
                 {
-                    instance = null;
+                    _instance = null;
                 }
             }
         }
@@ -45,10 +45,10 @@ namespace OutlookGoogleSync
 
             // Get the NameSpace and Logon information.
             // Outlook.NameSpace oNS = (Outlook.NameSpace)oApp.GetNamespace("mapi");
-            var oNS = oApp.GetNamespace("mapi");
+            var oNs = oApp.GetNamespace("mapi");
 
             //Log on by using a dialog box to choose the profile.
-            oNS.Logon(OGSSettings.Instance.User, OGSSettings.Instance.OutlookPassword, true, true);
+            oNs.Logon(OgsSettings.Instance.User, OgsSettings.Instance.OutlookPassword, true, true);
 
             //Alternate logon method that uses a specific profile.
             // If you use this logon method, 
@@ -56,24 +56,24 @@ namespace OutlookGoogleSync
             //oNS.Logon("YourValidProfile", Missing.Value, false, true); 
 			
             // Get the Calendar folder.
-            UseOutlookCalendar = oNS.GetDefaultFolder(OlDefaultFolders.olFolderCalendar);
+            UseOutlookCalendar = oNs.GetDefaultFolder(OlDefaultFolders.olFolderCalendar);
 
             
             //Show the item to pause.
             //oAppt.Display(true);
 
             // Done. Log off.
-            oNS.Logoff();
+            oNs.Logoff();
         }
         
         
-        public List<AppointmentItem> getCalendarEntries()
+        public List<AppointmentItem> GetCalendarEntries()
         {
-            var OutlookItems = UseOutlookCalendar.Items;
-            if (OutlookItems != null)
+            var outlookItems = UseOutlookCalendar.Items;
+            if (outlookItems != null)
             {
                 var result = new List<AppointmentItem>();
-                foreach (AppointmentItem ai in OutlookItems)
+                foreach (AppointmentItem ai in outlookItems)
                 {
                     result.Add(ai);
                 }
@@ -82,18 +82,18 @@ namespace OutlookGoogleSync
             return null;
         }
         
-        public List<AppointmentItem> getCalendarEntriesInRange()
+        public List<AppointmentItem> GetCalendarEntriesInRange()
         {
             var result = new List<AppointmentItem>();
             
-            var OutlookItems = UseOutlookCalendar.Items;
-            OutlookItems.Sort("[Start]",Type.Missing);
-            OutlookItems.IncludeRecurrences = true;
+            var outlookItems = UseOutlookCalendar.Items;
+            outlookItems.Sort("[Start]",Type.Missing);
+            outlookItems.IncludeRecurrences = true;
             
-            if (OutlookItems != null)
+            if (outlookItems != null)
             {
-                var min = DateTime.Now.AddDays(-OGSSettings.Instance.DaysInThePast);
-                var max = DateTime.Now.AddDays(+OGSSettings.Instance.DaysInTheFuture+1);
+                var min = DateTime.Now.AddDays(-OgsSettings.Instance.DaysInThePast);
+                var max = DateTime.Now.AddDays(+OgsSettings.Instance.DaysInTheFuture+1);
 
                 //initial version: did not work in all non-German environments
                 //string filter = "[End] >= '" + min.ToString("dd.MM.yyyy HH:mm") + "' AND [Start] < '" + max.ToString("dd.MM.yyyy HH:mm") + "'";
@@ -105,7 +105,7 @@ namespace OutlookGoogleSync
                 var filter = "[End] >= '" + min.ToString("g") + "' AND [Start] < '" + max.ToString("g") + "'";
                 
                 
-                foreach(AppointmentItem ai in OutlookItems.Restrict(filter))
+                foreach(AppointmentItem ai in outlookItems.Restrict(filter))
                 {
                     result.Add(ai);
                 }

@@ -7,9 +7,9 @@ namespace OutlookGoogleSync
 {
     class Coder
     {
-        static readonly string PasswordHash = "OGS@Pass&Word";
-        static readonly string SaltKey = "OGS@Salt&Key";
-        static readonly string VIKey = "@1O2G3S4O5G6S7O8";
+        private const string PasswordHash = "OGS@Pass&Word";
+        private const string SaltKey = "OGS@Salt&Key";
+        private const string ViKey = "@1O2G3S4O5G6S7O8";
 
         public static string Encrypt(string plainText)
         {
@@ -18,8 +18,8 @@ namespace OutlookGoogleSync
                 var plainTextBytes = Encoding.UTF8.GetBytes(plainText);
 
                 var keyBytes = new Rfc2898DeriveBytes(PasswordHash, Encoding.ASCII.GetBytes(SaltKey)).GetBytes(256 / 8);
-                var symmetricKey = new RijndaelManaged() { Mode = CipherMode.CBC, Padding = PaddingMode.Zeros };
-                var encryptor = symmetricKey.CreateEncryptor(keyBytes, Encoding.ASCII.GetBytes(VIKey));
+                var symmetricKey = new RijndaelManaged { Mode = CipherMode.CBC, Padding = PaddingMode.Zeros };
+                var encryptor = symmetricKey.CreateEncryptor(keyBytes, Encoding.ASCII.GetBytes(ViKey));
 
                 byte[] cipherTextBytes;
 
@@ -48,9 +48,9 @@ namespace OutlookGoogleSync
             {
                 var cipherTextBytes = Convert.FromBase64String(encryptedText);
                 var keyBytes = new Rfc2898DeriveBytes(PasswordHash, Encoding.ASCII.GetBytes(SaltKey)).GetBytes(256 / 8);
-                var symmetricKey = new RijndaelManaged() { Mode = CipherMode.CBC, Padding = PaddingMode.None };
+                var symmetricKey = new RijndaelManaged { Mode = CipherMode.CBC, Padding = PaddingMode.None };
 
-                var decryptor = symmetricKey.CreateDecryptor(keyBytes, Encoding.ASCII.GetBytes(VIKey));
+                var decryptor = symmetricKey.CreateDecryptor(keyBytes, Encoding.ASCII.GetBytes(ViKey));
                 var memoryStream = new MemoryStream(cipherTextBytes);
                 var cryptoStream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Read);
                 var plainTextBytes = new byte[cipherTextBytes.Length];

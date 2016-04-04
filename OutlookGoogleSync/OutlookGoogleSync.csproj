@@ -41,7 +41,7 @@
     <SccLocalPath>Svn</SccLocalPath>
     <SccAuxPath>Svn</SccAuxPath>
     <SccProvider>SubversionScc</SccProvider>
-    <NuGetPackageImportStamp>86658fc7</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>75a09313</NuGetPackageImportStamp>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">.\</SolutionDir>
     <RestorePackages>true</RestorePackages>
   </PropertyGroup>
@@ -76,22 +76,47 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <UseVSHostingProcess>false</UseVSHostingProcess>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DotNetOpenAuth">
-      <HintPath>lib\DotNetOpenAuth.dll</HintPath>
+    <Reference Include="DotNetOpenAuth, Version=4.0.0.11165, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
+      <HintPath>packages\Google.Apis.Authentication.1.6.0-beta\lib\net40\DotNetOpenAuth.dll</HintPath>
     </Reference>
-    <Reference Include="Google.Apis">
-      <HintPath>lib\Google.Apis.dll</HintPath>
+    <Reference Include="Google.Apis, Version=1.11.1.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>packages\Google.Apis.1.11.1\lib\net45\Google.Apis.dll</HintPath>
     </Reference>
-    <Reference Include="Google.Apis.Authentication.OAuth2">
-      <HintPath>lib\Google.Apis.Authentication.OAuth2.dll</HintPath>
+    <Reference Include="Google.Apis.Auth">
+      <HintPath>packages\Google.Apis.Auth.1.11.1\lib\net45\Google.Apis.Auth.dll</HintPath>
     </Reference>
-    <Reference Include="Google.Apis.Calendar.v3">
-      <HintPath>lib\CalendarService\Google.Apis.Calendar.v3.dll</HintPath>
+    <Reference Include="Google.Apis.Auth.PlatformServices">
+      <HintPath>packages\Google.Apis.Auth.1.11.1\lib\net45\Google.Apis.Auth.PlatformServices.dll</HintPath>
     </Reference>
-    <Reference Include="OUTLPIA">
-      <HintPath>lib\OUTLPIA.DLL</HintPath>
+    <Reference Include="Google.Apis.Authentication.OAuth2, Version=1.6.0.16918, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>packages\Google.Apis.Authentication.1.6.0-beta\lib\net40\Google.Apis.Authentication.OAuth2.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Calendar.v3, Version=1.11.1.439, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>packages\Google.Apis.Calendar.v3.1.11.1.439\lib\portable-net45+sl50+netcore45+wpa81+wp8\Google.Apis.Calendar.v3.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Core">
+      <HintPath>packages\Google.Apis.Core.1.11.1\lib\net45\Google.Apis.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.PlatformServices">
+      <HintPath>packages\Google.Apis.1.11.1\lib\net45\Google.Apis.PlatformServices.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.Outlook, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <Private>True</Private>
+      <HintPath>packages\Microsoft.Office.Interop.Outlook.15.0.4797.1003\lib\net20\Microsoft.Office.Interop.Outlook.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -101,15 +126,14 @@
     <Reference Include="System.Net" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="Zlib.Portable, Version=1.11.0.0, Culture=neutral, PublicKeyToken=431cba815f6a8b5b, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>packages\Zlib.Portable.Signed.1.11.0\lib\portable-net4+sl5+wp8+win8+wpa81+MonoTouch+MonoAndroid\Zlib.Portable.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AsyncHelpers.cs" />
     <Compile Include="Coder.cs" />
-    <Compile Include="EnterAuthorizationCode.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="EnterAuthorizationCode.Designer.cs">
-      <DependentUpon>EnterAuthorizationCode.cs</DependentUpon>
-    </Compile>
     <Compile Include="GoogleCalendar.cs" />
     <Compile Include="GoogleEvent.cs" />
     <Compile Include="MainForm.cs">
@@ -127,9 +151,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <None Include="Lib\DotNetOpenAuth.LICENSE" />
-    <None Include="Lib\log4net.LICENSE" />
-    <None Include="Lib\Newtonsof.Json.LICENSE" />
+    <None Include="packages.config" />
     <None Include="RedemptionLoader.cs" />
     <Compile Include="RegexUtilities.cs" />
     <Compile Include="Settings.cs" />
@@ -143,9 +165,6 @@
     <None Include="release_notes.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="EnterAuthorizationCode.resx">
-      <DependentUpon>EnterAuthorizationCode.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -178,30 +197,6 @@
     <Content Include="calendar.ico" />
     <Content Include="google.ico" />
     <Content Include="icon.ico" />
-    <Content Include="Lib\CalendarService\Google.Apis.Calendar.v3.dll" />
-    <Content Include="Lib\CalendarService\Google.Apis.Calendar.v3.pdb" />
-    <Content Include="Lib\CalendarService\Google.Apis.Calendar.v3.xml" />
-    <Content Include="Lib\DotNetOpenAuth.dll" />
-    <Content Include="Lib\Google.Apis.Authentication.OAuth2.dll" />
-    <Content Include="Lib\Google.Apis.Authentication.OAuth2.pdb" />
-    <Content Include="Lib\Google.Apis.Authentication.OAuth2.xml" />
-    <Content Include="Lib\Google.Apis.dll" />
-    <Content Include="Lib\Google.Apis.pdb" />
-    <Content Include="Lib\Google.Apis.Silverlight.dll" />
-    <Content Include="Lib\Google.Apis.Silverlight.pdb" />
-    <Content Include="Lib\Google.Apis.Tools.CodeGen.dll" />
-    <Content Include="Lib\Google.Apis.Tools.CodeGen.pdb" />
-    <Content Include="Lib\Google.Apis.Tools.CodeGen.xml" />
-    <Content Include="Lib\Google.Apis.xml" />
-    <Content Include="Lib\log4net.dll" />
-    <Content Include="Lib\Newtonsoft.Json.Net35.dll" />
-    <Content Include="Lib\Newtonsoft.Json.Net35.xml" />
-    <Content Include="Lib\Newtonsoft.Json.Silverlight.dll" />
-    <Content Include="Lib\nunit.framework.dll" />
-    <Content Include="Lib\OUTLPIA.DLL" />
-    <Content Include="Lib\ServiceGenerator.exe" />
-    <Content Include="Lib\ServiceGenerator.pdb" />
-    <Content Include="Lib\ServiceGenerator.xml" />
     <Content Include="save.ico" />
     <None Include="sync.ico" />
   </ItemGroup>
@@ -227,7 +222,6 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.Targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

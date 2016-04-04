@@ -38,13 +38,13 @@ namespace OutlookGoogleSync
         private async Task<bool> PrivateDoWorkCallback()
         {
             var syncStarted = DateTime.Now;
-            var cbCreateFilesChecked = OGSSettings.Instance.CreateTextFiles;
+            var cbCreateFilesChecked = OgsSettings.Instance.CreateTextFiles;
 
             OnLogboxOutDelegate("Sync started at " + syncStarted);
             OnLogboxOutDelegate("--------------------------------------------------");
 
             OnLogboxOutDelegate("Reading Outlook Calendar Entries...");
-            var outlookEntries = new GoogleEventsList(OutlookCalendar.Instance.getCalendarEntriesInRange());
+            var outlookEntries = new GoogleEventsList(OutlookCalendar.Instance.GetCalendarEntriesInRange());
             if (cbCreateFilesChecked)
             {
                 using (TextWriter tw = new StreamWriter("export_found_in_outlook.txt"))
@@ -60,7 +60,7 @@ namespace OutlookGoogleSync
             OnLogboxOutDelegate("--------------------------------------------------");
 
             OnLogboxOutDelegate("Reading Google Calendar Entries...");
-            var googleEntries = new GoogleEventsList(GoogleCalendar.Instance.getCalendarEntriesInRange());
+            var googleEntries = new GoogleEventsList(GoogleCalendar.Instance.GetCalendarEntriesInRange());
             if (cbCreateFilesChecked)
             {
                 using (TextWriter tw = new StreamWriter("export_found_in_google.txt"))
@@ -111,7 +111,7 @@ namespace OutlookGoogleSync
                 foreach (var ev in googleEntriesToBeDeleted)
                 {
                     OnLogboxOutDelegate(string.Format(" {0}", ev));
-                    GoogleCalendar.Instance.deleteCalendarEntry(ev.Event);
+                    GoogleCalendar.Instance.DeleteCalendarEntry(ev.Event);
                 }
                 OnLogboxOutDelegate("Done.");
                 OnLogboxOutDelegate("--------------------------------------------------");
@@ -123,7 +123,7 @@ namespace OutlookGoogleSync
                 foreach (var ai in outlookEntriesToBeCreated)
                 {
                     OnLogboxOutDelegate(string.Format(" {0}", ai));
-                    GoogleCalendar.Instance.addEntry(ai.Event);
+                    GoogleCalendar.Instance.AddEntry(ai.Event);
                 }
                 OnLogboxOutDelegate("Done.");
                 OnLogboxOutDelegate("--------------------------------------------------");

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OutlookGoogleSync
 {
-    class SyncManager
+    public class SyncManager
     {
         public delegate void SyncDoneDelegate(int deleted, int created);
         public delegate void LogboxOutDelegate(string text);
@@ -15,6 +15,11 @@ namespace OutlookGoogleSync
         public event LogboxOutDelegate OnLogboxOutDelegate;
         public event HandleExceptionDelegate OnExceptionDelegate;
         public event SyncDoneDelegate OnSyncDoneDelegate;
+
+        public SyncManager()
+        {
+            
+        }
 
         public async Task<bool> DoWork()
         {

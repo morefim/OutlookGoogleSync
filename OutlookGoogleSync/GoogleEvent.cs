@@ -7,7 +7,7 @@ using TimeZone = System.TimeZone;
 
 namespace OutlookGoogleSync
 {
-    class GoogleEvent
+    public class GoogleEvent
     {
         private readonly Event _event;
 

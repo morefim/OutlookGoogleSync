@@ -12,13 +12,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{DBE18C
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OutlookGoogleSyncClient", "..\OutlookGoogleSyncClient\OutlookGoogleSyncClient.csproj", "{E8C6BE03-664A-4489-AFCE-C378BFE23568}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D15B261D-827E-4E4D-9F1A-A6DB996899F5}"
 	ProjectSection(SolutionItems) = preProject
 		ThirdParty\ReleaseNotes.htm = ThirdParty\ReleaseNotes.htm
 		ThirdParty\security_outlook.exe = ThirdParty\security_outlook.exe
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OutlookGoogleSyncClient", "..\OutlookGoogleSyncClient\OutlookGoogleSyncClient.csproj", "{C99B0777-7FA4-46F2-A0C7-4D76C5A99334}"
 EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
@@ -45,16 +45,18 @@ Global
 		{B35C9DB2-79BC-46A3-9BE4-BCE33BC3721E}.Release|Mixed Platforms.Build.0 = Release|x86
 		{B35C9DB2-79BC-46A3-9BE4-BCE33BC3721E}.Release|x86.ActiveCfg = Release|x86
 		{B35C9DB2-79BC-46A3-9BE4-BCE33BC3721E}.Release|x86.Build.0 = Release|x86
-		{E8C6BE03-664A-4489-AFCE-C378BFE23568}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E8C6BE03-664A-4489-AFCE-C378BFE23568}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E8C6BE03-664A-4489-AFCE-C378BFE23568}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{E8C6BE03-664A-4489-AFCE-C378BFE23568}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{E8C6BE03-664A-4489-AFCE-C378BFE23568}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{E8C6BE03-664A-4489-AFCE-C378BFE23568}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E8C6BE03-664A-4489-AFCE-C378BFE23568}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E8C6BE03-664A-4489-AFCE-C378BFE23568}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{E8C6BE03-664A-4489-AFCE-C378BFE23568}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{E8C6BE03-664A-4489-AFCE-C378BFE23568}.Release|x86.ActiveCfg = Release|Any CPU
+		{C99B0777-7FA4-46F2-A0C7-4D76C5A99334}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C99B0777-7FA4-46F2-A0C7-4D76C5A99334}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C99B0777-7FA4-46F2-A0C7-4D76C5A99334}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{C99B0777-7FA4-46F2-A0C7-4D76C5A99334}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{C99B0777-7FA4-46F2-A0C7-4D76C5A99334}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C99B0777-7FA4-46F2-A0C7-4D76C5A99334}.Debug|x86.Build.0 = Debug|Any CPU
+		{C99B0777-7FA4-46F2-A0C7-4D76C5A99334}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C99B0777-7FA4-46F2-A0C7-4D76C5A99334}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C99B0777-7FA4-46F2-A0C7-4D76C5A99334}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{C99B0777-7FA4-46F2-A0C7-4D76C5A99334}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{C99B0777-7FA4-46F2-A0C7-4D76C5A99334}.Release|x86.ActiveCfg = Release|Any CPU
+		{C99B0777-7FA4-46F2-A0C7-4D76C5A99334}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

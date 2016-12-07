@@ -144,19 +144,26 @@ namespace OutlookGoogleSync
             bGetMyCalendars.Enabled = false;
             cbCalendars.Enabled = false;
 
-            var calendars = GoogleCalendar.Instance.GetCalendars();
-            if (calendars != null)
+            try
             {
-                cbCalendars.Items.Clear();
-                foreach (var mcle in calendars)
+                var calendars = GoogleCalendar.Instance.GetCalendars();
+                if (calendars != null)
                 {
-                    cbCalendars.Items.Add(mcle);
+                    cbCalendars.Items.Clear();
+                    foreach (var mcle in calendars)
+                    {
+                        cbCalendars.Items.Add(mcle);
+                    }
+                    Instance.cbCalendars.SelectedIndex = 0;
                 }
-                Instance.cbCalendars.SelectedIndex = 0;
-            }
 
-            bGetMyCalendars.Enabled = true;
-            cbCalendars.Enabled = true;
+                bGetMyCalendars.Enabled = true;
+                cbCalendars.Enabled = true;
+            }
+            catch (Exception ex)
+            {
+                HandleException(ex);
+            }
         }
 
         async void SyncNow_Click(object sender, EventArgs e)
@@ -188,32 +195,41 @@ namespace OutlookGoogleSync
 
         public void HandleException(Exception ex)
         {
-            if (InvokeRequired)
-                Invoke((Action<Exception>)HandleException, new object[] { ex });
-            else
+            while (true)
             {
-                try
+                if (ex.InnerException != null)
                 {
-                    if (cbShowBubbleTooltips.Checked)
-                    {
-                        notifyIcon.BalloonTipTitle = @"Outlook Google Sync";
-                        notifyIcon.BalloonTipText = @"Exception: " + ex.Message;
-                        notifyIcon.BalloonTipIcon = ToolTipIcon.Error;
-                        notifyIcon.Text = ("OGS: " + notifyIcon.BalloonTipText).Truncate(63);
-                        notifyIcon.ShowBalloonTip(500);
-                    }
+                    ex = ex.InnerException;
+                    continue;
+                }
 
-                    Logboxout("Exception: " + ex.Message);
-                    using (TextWriter tw = new StreamWriter("exception.txt"))
+                if (InvokeRequired)
+                    Invoke((Action<Exception>) HandleException, new object[] {ex});
+                else
+                {
+                    try
                     {
-                        tw.WriteLine(DateTime.Now + "\t" + ex);
-                        tw.Close();
+                        if (cbShowBubbleTooltips.Checked)
+                        {
+                            notifyIcon.BalloonTipTitle = @"Outlook Google Sync";
+                            notifyIcon.BalloonTipText = @"Exception: " + ex.Message;
+                            notifyIcon.BalloonTipIcon = ToolTipIcon.Error;
+                            notifyIcon.Text = ("OGS: " + notifyIcon.BalloonTipText).Truncate(63);
+                            notifyIcon.ShowBalloonTip(500);
+                        }
+                        Logboxout("Exception: " + ex.Message);
+                        using (TextWriter tw = new StreamWriter("exception.txt"))
+                        {
+                            tw.WriteLine(DateTime.Now + "\t" + ex);
+                            tw.Close();
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.Fail(e.Message);
                     }
                 }
-                catch (Exception e)
-                {
-                    Debug.Fail(e.Message);
-                }
+                break;
             }
         }
 

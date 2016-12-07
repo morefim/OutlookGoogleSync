@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.30501.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OutlookGoogleSync", "OutlookGoogleSync.csproj", "{B35C9DB2-79BC-46A3-9BE4-BCE33BC3721E}"
 EndProject
@@ -13,6 +13,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{DBE18C
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OutlookGoogleSyncClient", "..\OutlookGoogleSyncClient\OutlookGoogleSyncClient.csproj", "{E8C6BE03-664A-4489-AFCE-C378BFE23568}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D15B261D-827E-4E4D-9F1A-A6DB996899F5}"
+	ProjectSection(SolutionItems) = preProject
+		ThirdParty\ReleaseNotes.htm = ThirdParty\ReleaseNotes.htm
+		ThirdParty\security_outlook.exe = ThirdParty\security_outlook.exe
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution

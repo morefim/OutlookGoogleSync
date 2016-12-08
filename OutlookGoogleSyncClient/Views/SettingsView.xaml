@@ -7,6 +7,17 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-            <Label Content="Settings..."/>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <GroupBox Grid.Row="0" Header="Google Calendar" Padding="5">
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Use Calendar:" VerticalAlignment="Top" />
+                <ComboBox VerticalAlignment="Top">
+                </ComboBox>
+            </StackPanel>
+        </GroupBox>
     </Grid>
 </UserControl>

@@ -4,8 +4,13 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:OutlookGoogleSyncClient.Views"
+      xmlns:common="clr-namespace:OutlookGoogleSyncClient"
       mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="300">
-    <StackPanel>
-        <TextBlock Name="LogOut" Margin="10" Background="White" Text="{Binding Log}"></TextBlock>
-    </StackPanel>
+    <DockPanel>
+        <Border BorderThickness="0,0,1,1" BorderBrush="Gainsboro">
+            <Border BorderThickness="1,1,0,0" BorderBrush="DarkGray">
+                <TextBlock Name="LogOut" Margin="2" Background="White" common:FormattedTextBehaviorEx.FormattedText="{Binding Log}" />
+            </Border>
+        </Border>
+    </DockPanel>
 </UserControl>

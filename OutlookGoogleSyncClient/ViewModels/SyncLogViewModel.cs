@@ -10,7 +10,7 @@ namespace OutlookGoogleSyncClient.ViewModels
         {
             DisplayName = "Syncronization";
 
-            Log = "Test";
+            Log = "Some <Bold>formatted</Bold> text. <LineBreak/>New line.";
         }
 
         public string Log

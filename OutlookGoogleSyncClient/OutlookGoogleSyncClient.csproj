@@ -81,6 +81,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="FormattedTextBehavior.cs" />
+    <Compile Include="Service\GoogleCalendar.cs" />
+    <Compile Include="Service\GoogleCalendarManager.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
     <Compile Include="ViewModels\SyncLogViewModel.cs" />

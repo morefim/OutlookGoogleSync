@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows;
 using Autofac;
 using Caliburn.Micro;
+using OutlookGoogleSyncClient.Service;
 using OutlookGoogleSyncClient.ViewModels;
 
 namespace OutlookGoogleSyncClient
@@ -52,6 +53,8 @@ namespace OutlookGoogleSyncClient
                 .InstancePerDependency();
 
             builder.RegisterType<WindowManager>().As<IWindowManager>().SingleInstance();
+
+            builder.RegisterType<GoogleCalendarManager>().As<IGoogleCalendarManager>().SingleInstance();
 
             _container = builder.Build();
         }

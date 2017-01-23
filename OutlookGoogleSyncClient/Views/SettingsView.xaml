@@ -12,11 +12,11 @@
             <RowDefinition/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <GroupBox Grid.Row="0" Header="Google Calendar" Padding="5">
+        <GroupBox Grid.Row="0" Header="Google Calendar" Padding="10">
             <StackPanel Orientation="Horizontal">
                 <Label Content="Use Calendar:" VerticalAlignment="Top" />
-                <ComboBox VerticalAlignment="Top">
-                </ComboBox>
+                <ComboBox VerticalAlignment="Top" ItemsSource="{Binding GoogleCalendars}" 
+                          SelectedItem="{Binding SelectedGoogleCalendar, Mode=TwoWay}" MinWidth="170" Margin="0,2,0,0" />
             </StackPanel>
         </GroupBox>
     </Grid>

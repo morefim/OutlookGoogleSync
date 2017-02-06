@@ -56,6 +56,10 @@ namespace OutlookGoogleSyncClient
 
             builder.RegisterType<GoogleCalendarManager>().As<IGoogleCalendarManager>().SingleInstance();
 
+            builder.RegisterType<OutlookGoogleSyncSettings>().As<IOutlookGoogleSyncSettings>().SingleInstance();
+
+            builder.Register(ctx => new Lazy<OutlookGoogleSyncSettings>(OutlookGoogleSyncSettings.Load).Value).As<IOutlookGoogleSyncSettings>().SingleInstance();
+
             _container = builder.Build();
         }
 

@@ -8,6 +8,7 @@ namespace OutlookGoogleSyncClient.Service
 {
     public class GoogleCalendar
     {
+        public string Id { get; set; }
         public string Name { get; set; } = "Undefined";
 
         public override string ToString()

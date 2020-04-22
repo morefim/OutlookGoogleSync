@@ -30,7 +30,7 @@ namespace OutlookGoogleSync
 
             Instance = this;
 
-            _syncManager.OnLogboxOutDelegate += Logboxout;
+            _syncManager.OnLogboxOutDelegate += LogBoxOut;
             _syncManager.OnExceptionDelegate += HandleException;
             _syncManager.OnSyncDoneDelegate += SyncDone;
 
@@ -40,14 +40,19 @@ namespace OutlookGoogleSync
             //load settings/create settings file
             try
             {
-                if (File.Exists(Filename))
-                    OgsSettings.Instance = XmlManager.Import<OgsSettings>(Filename);
-                else
-                    XmlManager.Export(OgsSettings.Instance, Filename);
+                if (!File.Exists(Filename)) throw new FileNotFoundException("Unable to found configuration file", Filename);
+                OgsSettings.Instance = XmlManager.Import<OgsSettings>(Filename);
             }
-            catch (Exception e)
+            catch
             {
-                MessageBox.Show(e.Message, @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                try
+                {
+                    XmlManager.Export(OgsSettings.Instance, Filename);
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.Message, @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
 
             //update GUI from Settings
@@ -84,7 +89,7 @@ namespace OutlookGoogleSync
                 ShowAlways = true
             };
             toolTip1.SetToolTip(cbCalendars,
-                "The Google Calendar to synchonize with.");
+                "The Google Calendar to synchronize with.");
             toolTip1.SetToolTip(cbAddAttendees,
                 "While Outlook has fields for Organizer, RequiredAttendees and OptionalAttendees, Google has not.\n" +
                 "If checked, this data is added at the end of the description as text.");
@@ -115,11 +120,11 @@ namespace OutlookGoogleSync
         {
             if (!cbSyncEvery.Checked) return;
 
-            var newtime = DateTime.Now;
-            if ((newtime - Oldtime) < new TimeSpan(0, OgsSettings.Instance.SyncPeriod, 0)) 
+            var newTime = DateTime.Now;
+            if ((newTime - Oldtime) < new TimeSpan(0, OgsSettings.Instance.SyncPeriod, 0)) 
                 return;
 
-            Oldtime = newtime;
+            Oldtime = newTime;
             SyncNow_Click(null, null);
         }
 
@@ -128,11 +133,11 @@ namespace OutlookGoogleSync
             if (cbShowBubbleTooltips.Checked)
             {
                 notifyIcon.BalloonTipTitle = @"Outlook Google Sync";
-                notifyIcon.BalloonTipText = @"Syncronization complete";
+                notifyIcon.BalloonTipText = @"Synchronization complete";
                 if (created > 0)
-                    notifyIcon.BalloonTipText += string.Format(", {0} created", created);
+                    notifyIcon.BalloonTipText += $@", {created} created";
                 if (deleted > 0)
-                    notifyIcon.BalloonTipText += string.Format(", {0} deleted", deleted);
+                    notifyIcon.BalloonTipText += $@", {deleted} deleted";
                 notifyIcon.BalloonTipIcon = ToolTipIcon.Info;
                 notifyIcon.Text = ("OGS: " + notifyIcon.BalloonTipText).Truncate(63);
                 notifyIcon.ShowBalloonTip(500);
@@ -185,10 +190,10 @@ namespace OutlookGoogleSync
             bSyncNow.Enabled = true;
         }
 
-        void Logboxout(string s)
+        void LogBoxOut(string s)
         {
             if (LogBox.InvokeRequired)
-                Invoke((Action<string>) Logboxout, new object[] {s});
+                Invoke((Action<string>) LogBoxOut, s);
             else
                 LogBox.AppendText(s + Environment.NewLine);
         }
@@ -204,7 +209,7 @@ namespace OutlookGoogleSync
                 }
 
                 if (InvokeRequired)
-                    Invoke((Action<Exception>) HandleException, new object[] {ex});
+                    Invoke((Action<Exception>) HandleException, ex);
                 else
                 {
                     try
@@ -217,7 +222,7 @@ namespace OutlookGoogleSync
                             notifyIcon.Text = ("OGS: " + notifyIcon.BalloonTipText).Truncate(63);
                             notifyIcon.ShowBalloonTip(500);
                         }
-                        Logboxout("Exception: " + ex.Message);
+                        LogBoxOut("Exception: " + ex.Message);
                         using (TextWriter tw = new StreamWriter("exception.txt"))
                         {
                             tw.WriteLine(DateTime.Now + "\t" + ex);

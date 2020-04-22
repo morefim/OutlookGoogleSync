@@ -43,70 +43,33 @@ namespace OutlookGoogleSync
         private async Task<bool> PrivateDoWorkCallback()
         {
             var syncStarted = DateTime.Now;
-            var cbCreateFilesChecked = OgsSettings.Instance.CreateTextFiles;
 
             OnLogboxOutDelegate("Sync started at " + syncStarted);
             OnLogboxOutDelegate("--------------------------------------------------");
 
             OnLogboxOutDelegate("Reading Outlook Calendar Entries...");
-            var outlookEntries = new GoogleEventsList(OutlookCalendar.Instance.GetCalendarEntriesInRange());
-            if (cbCreateFilesChecked)
-            {
-                using (TextWriter tw = new StreamWriter("export_found_in_outlook.txt"))
-                {
-                    foreach (var ai in outlookEntries)
-                    {
-                        tw.WriteLine(ai.ToString());
-                    }
-                    tw.Close();
-                }
-            }
+            //var outlookEntries = new GoogleEventsList(OutlookCalendar.Instance.GetCalendarEntriesInRange());
+            var outlookEntries = new GoogleEventsList(OutlookWebCalendar.Instance.GetCalendarEntriesInRange());
+            ExportToLogFile("found_in_outlook", outlookEntries);
+
             OnLogboxOutDelegate("Found " + outlookEntries.Count + " Outlook Calendar Entries.");
             OnLogboxOutDelegate("--------------------------------------------------");
 
             OnLogboxOutDelegate("Reading Google Calendar Entries...");
             var googleEntries = new GoogleEventsList(GoogleCalendar.Instance.GetCalendarEntriesInRange());
-            if (cbCreateFilesChecked)
-            {
-                using (TextWriter tw = new StreamWriter("export_found_in_google.txt"))
-                {
-                    foreach (var ev in googleEntries)
-                    {
-                        tw.WriteLine(ev.ToString());
-                    }
-                    tw.Close();
-                }
-            }
+            ExportToLogFile("found_in_google", googleEntries);
+
             OnLogboxOutDelegate("Found " + googleEntries.Count + " Google Calendar Entries.");
             OnLogboxOutDelegate("--------------------------------------------------");
 
             var googleEntriesToBeDeleted = IdentifyGoogleEntriesToBeDeleted(outlookEntries, googleEntries);
-            if (cbCreateFilesChecked)
-            {
-                using (TextWriter tw = new StreamWriter("export_to_be_deleted.txt"))
-                {
-                    foreach (var ev in googleEntriesToBeDeleted)
-                    {
-                        tw.WriteLine(ev.ToString());
-                    }
-                    tw.Close();
-                }
-            }
+            ExportToLogFile("to_be_deleted", googleEntriesToBeDeleted);
             OnLogboxOutDelegate(googleEntriesToBeDeleted.Count + " Google Calendar Entries to be deleted.");
 
             //OutlookEntriesToBeCreated ...in Google!
             var outlookEntriesToBeCreated = IdentifyOutlookEntriesToBeCreated(outlookEntries, googleEntries);
-            if (cbCreateFilesChecked)
-            {
-                using (TextWriter tw = new StreamWriter("export_to_be_created.txt"))
-                {
-                    foreach (var ai in outlookEntriesToBeCreated)
-                    {
-                        tw.WriteLine(ai.ToString());
-                    }
-                    tw.Close();
-                }
-            }
+            ExportToLogFile("to_be_created", outlookEntriesToBeCreated);
+
             OnLogboxOutDelegate(outlookEntriesToBeCreated.Count + " Entries to be created in Google.");
             OnLogboxOutDelegate("--------------------------------------------------");
 
@@ -115,7 +78,7 @@ namespace OutlookGoogleSync
                 OnLogboxOutDelegate("Deleting " + googleEntriesToBeDeleted.Count + " Google Calendar Entries...");
                 foreach (var ev in googleEntriesToBeDeleted)
                 {
-                    OnLogboxOutDelegate(string.Format(" {0}", ev));
+                    OnLogboxOutDelegate($" {ev}");
                     GoogleCalendar.Instance.DeleteCalendarEntry(ev.Event);
                 }
                 OnLogboxOutDelegate("Done.");
@@ -127,7 +90,7 @@ namespace OutlookGoogleSync
                 OnLogboxOutDelegate("Creating " + outlookEntriesToBeCreated.Count + " Entries in Google...");
                 foreach (var ai in outlookEntriesToBeCreated)
                 {
-                    OnLogboxOutDelegate(string.Format(" {0}", ai));
+                    OnLogboxOutDelegate($" {ai}");
                     GoogleCalendar.Instance.AddEntry(ai.Event);
                 }
                 OnLogboxOutDelegate("Done.");
@@ -143,11 +106,28 @@ namespace OutlookGoogleSync
             return await Task.FromResult(true);
         }
 
+        private static void ExportToLogFile(string fileName, List<GoogleEvent> googleEntriesToBeDeleted)
+        {
+            var cbCreateFilesChecked = OgsSettings.Instance.CreateTextFiles;
+            if (!cbCreateFilesChecked) return;
+
+            using (TextWriter tw = new StreamWriter($"{fileName}.txt"))
+            {
+                foreach (var ev in googleEntriesToBeDeleted)
+                {
+                    tw.WriteLine(ev.ToString());
+                }
+
+                tw.Close();
+            }
+        }
+
         public List<GoogleEvent> IdentifyGoogleEntriesToBeDeleted(List<GoogleEvent> outlook, List<GoogleEvent> google)
         {
             var result = new List<GoogleEvent>();
             foreach (var g in google)
             {
+                // find obsolete events
                 var found = outlook.Exists(o => g.Equals(o));
                 if (!found)
                 {

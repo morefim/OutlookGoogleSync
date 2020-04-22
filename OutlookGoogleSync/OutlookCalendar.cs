@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-//using Outlook = Microsoft.Office.Interop.Outlook;
 using Microsoft.Office.Interop.Outlook;
 using System.Runtime.InteropServices;
+using MAPIFolder = Microsoft.Office.Interop.Outlook.MAPIFolder;
+
 //using Redemption;
 
 namespace OutlookGoogleSync
@@ -36,10 +37,9 @@ namespace OutlookGoogleSync
         }
         
         public MAPIFolder UseOutlookCalendar;
-        
-        
+
         public OutlookCalendar()
-        {        
+        {
             // Create the Outlook application.
             var oApp = new Application();
 
@@ -65,8 +65,7 @@ namespace OutlookGoogleSync
             // Done. Log off.
             oNs.Logoff();
         }
-        
-        
+
         public List<AppointmentItem> GetCalendarEntries()
         {
             var outlookItems = UseOutlookCalendar.Items;

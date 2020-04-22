@@ -11,7 +11,7 @@ namespace OutlookGoogleSync
         public bool IsValidEmail(string strIn)
         {
             _invalid = false;
-            if (String.IsNullOrEmpty(strIn))
+            if (string.IsNullOrEmpty(strIn))
                 return false;
 
             // Use IdnMapping class to convert Unicode domain names.

@@ -14,7 +14,7 @@ namespace OutlookGoogleSync
 
             public static int RegisterWindowMessage(string format, params object[] args)
             {
-                var message = String.Format(format, args);
+                var message = string.Format(format, args);
                 return RegisterWindowMessage(message);
             }
 
@@ -46,7 +46,7 @@ namespace OutlookGoogleSync
                     var attributes = Assembly.GetEntryAssembly().GetCustomAttributes(typeof(GuidAttribute), false);
                     if (attributes.Length == 0)
                     {
-                        return String.Empty;
+                        return string.Empty;
                     }
                     return ((GuidAttribute)attributes[0]).Value;
 
@@ -63,7 +63,7 @@ namespace OutlookGoogleSync
         static public bool Start()
         {
             var onlyInstance = false;
-            var mutexName = String.Format("Local\\{0}", ProgramInfo.AssemblyGuid);
+            var mutexName = $"Local\\{ProgramInfo.AssemblyGuid}";
 
             // if you want your app to be limited to a single instance
             // across ALL SESSIONS (multiple users & terminal services), then use the following line instead:

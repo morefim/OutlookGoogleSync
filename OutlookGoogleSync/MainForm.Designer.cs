@@ -158,24 +158,24 @@ namespace OutlookGoogleSync
             // 
             // tbOutlookPassword
             // 
-            this.tbOutlookPassword.Location = new System.Drawing.Point(375, 25);
+            this.tbOutlookPassword.Location = new System.Drawing.Point(337, 25);
             this.tbOutlookPassword.Name = "tbOutlookPassword";
-            this.tbOutlookPassword.Size = new System.Drawing.Size(135, 20);
+            this.tbOutlookPassword.Size = new System.Drawing.Size(173, 20);
             this.tbOutlookPassword.TabIndex = 3;
             this.tbOutlookPassword.TextChanged += new System.EventHandler(this.tbOutlookPassword_TextChanged);
             // 
             // tbOutlookUser
             // 
-            this.tbOutlookUser.Location = new System.Drawing.Point(75, 25);
+            this.tbOutlookUser.Location = new System.Drawing.Point(47, 25);
             this.tbOutlookUser.Name = "tbOutlookUser";
-            this.tbOutlookUser.Size = new System.Drawing.Size(135, 20);
+            this.tbOutlookUser.Size = new System.Drawing.Size(201, 20);
             this.tbOutlookUser.TabIndex = 2;
             this.tbOutlookUser.TextChanged += new System.EventHandler(this.tbOutlookUser_TextChanged);
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(313, 28);
+            this.label5.Location = new System.Drawing.Point(275, 28);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(56, 13);
             this.label5.TabIndex = 1;
@@ -186,9 +186,9 @@ namespace OutlookGoogleSync
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(6, 28);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(63, 13);
+            this.label4.Size = new System.Drawing.Size(35, 13);
             this.label4.TabIndex = 0;
-            this.label4.Text = "User Name:";
+            this.label4.Text = "Email:";
             // 
             // groupBox5
             // 

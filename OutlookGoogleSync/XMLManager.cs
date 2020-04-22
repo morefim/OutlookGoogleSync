@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Xml.Serialization;
 using System.Xml;
 
@@ -15,7 +14,7 @@ namespace OutlookGoogleSync
         /// </summary>
         /// <param name="obj">The object that is to be serialized/exported to XML.</param>
         /// <param name="filename">The filename of the xml file to be written.</param>
-        public static void Export(Object obj, string filename)
+        public static void Export(object obj, string filename)
         {
             using (var writer = new XmlTextWriter(filename, null))
             {

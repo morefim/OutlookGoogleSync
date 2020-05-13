@@ -16,16 +16,20 @@ namespace OutlookGoogleSync
 	/// Description of GoogleCalendar.
 	/// </summary>
 	public class GoogleCalendar
-	{
+    {
+        private const string ClientId = "1050291135187-5c9ilee5s2398e5glsejtqghetbi114d.apps.googleusercontent.com";
+        private const string ClientSecret = "uQiR7G6ExPMxXxXgrZ9eDpoj";
+
+
         private const string ApplicationName = "Outlook Google Calendar Sync Engine";
         /// <summary>
         /// From Google Developer console https://console.developers.google.com
         /// </summary>
-        private const string ClientId = "662204240419.apps.googleusercontent.com";
+        //private const string ClientId = "662204240419.apps.googleusercontent.com";
         /// <summary>
         /// From Google Developer console https://console.developers.google.com
         /// </summary>
-        private const string ClientSecret = "4nJPnk5fE8yJM_HNUNQEEvjU";
+        //private const string ClientSecret = "4nJPnk5fE8yJM_HNUNQEEvjU";
         /// <summary>
         /// A string used to identify a user.
         /// </summary>

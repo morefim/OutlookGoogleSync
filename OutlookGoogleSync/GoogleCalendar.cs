@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using Google;
 using Google.Apis.Auth.OAuth2;
@@ -51,7 +54,9 @@ namespace OutlookGoogleSync
         };
 	    
 		public GoogleCalendar()
-		{
+        {
+            NEVER_EAT_POISON_Disable_CertificateValidation();
+
             // here is where we Request the user to give us access, or use the Refresh Token that was previously stored in %AppData%
             var clientSecrets = new ClientSecrets
             {
@@ -69,6 +74,15 @@ namespace OutlookGoogleSync
                 ApplicationName = ApplicationName,
             });
 		}
+
+        //[Obsolete("Do not use this in Production code!!!", true)]
+        static void NEVER_EAT_POISON_Disable_CertificateValidation()
+        {
+            // Disabling certificate validation can expose you to a man-in-the-middle attack
+            // which may allow your encrypted message to be read by an attacker
+            // https://stackoverflow.com/a/14907718/740639
+            ServicePointManager.ServerCertificateValidationCallback = (s, certificate, chain, sslPolicyErrors) => true;
+        }
 
         public List<OgsCalendarListEntry> GetCalendars()
         {

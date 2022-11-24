@@ -22,18 +22,12 @@ namespace OutlookGoogleSync
                     _instance = new OgsSettings();
                 return _instance;
             }
-            set
-            {
-                _instance = value;            
-            }          
+            set => _instance = value;
         }
 
         public bool Autostart
         {
-            get 
-            {
-                return Shortcut.IsStartupFolderShortcutExists();
-            }
+            get => Shortcut.IsStartupFolderShortcutExists();
 
             set
             {
@@ -49,13 +43,7 @@ namespace OutlookGoogleSync
         }
 
         [XmlIgnore]
-        public string OutlookPassword 
-        { 
-            get 
-            { 
-                return Coder.Decrypt(Password); 
-            } 
-        }
+        public string OutlookPassword => Coder.Decrypt(Password);
 
 
         [OptionalField(VersionAdded = 2)]
@@ -69,7 +57,6 @@ namespace OutlookGoogleSync
 
         [OptionalField(VersionAdded = 2)]
         public OgsCalendarListEntry UseGoogleCalendar = new OgsCalendarListEntry();
-
 
         [OptionalField(VersionAdded = 3)]
         public bool SyncEvery = true;
@@ -85,7 +72,6 @@ namespace OutlookGoogleSync
 
         [OptionalField(VersionAdded = 2)]
         public bool MinimizeToTray = true;
-
 
         [OptionalField(VersionAdded = 2)]
         public bool AddDescription = false;
@@ -103,6 +89,9 @@ namespace OutlookGoogleSync
         public string User = "";
 
         [OptionalField(VersionAdded = 2)]
-        public string Password = ""; 
+        public string Password = "";
+
+        [OptionalField(VersionAdded = 4)]
+        public bool ByPassKLALogoutPolicy = false;
     }
 }

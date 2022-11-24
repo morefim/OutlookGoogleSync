@@ -1,0 +1,96 @@
+{
+	"id": "6e64cd64-2e86-44d7-84aa-71f766ecd5b2",
+	"acceptMappedClaims": null,
+	"accessTokenAcceptedVersion": null,
+	"addIns": [],
+	"allowPublicClient": true,
+	"appId": "70b10211-9fb4-4e7c-8a2d-add3e1486d22",
+	"appRoles": [],
+	"oauth2AllowUrlPathMatching": false,
+	"createdDateTime": "2021-03-09T12:54:53Z",
+	"description": null,
+	"certification": null,
+	"disabledByMicrosoftStatus": null,
+	"groupMembershipClaims": null,
+	"identifierUris": [],
+	"informationalUrls": {
+		"termsOfService": null,
+		"support": null,
+		"privacy": null,
+		"marketing": null
+	},
+	"keyCredentials": [],
+	"knownClientApplications": [],
+	"logoUrl": null,
+	"logoutUrl": null,
+	"name": "OutlookGoogleSync",
+	"notes": null,
+	"oauth2AllowIdTokenImplicitFlow": false,
+	"oauth2AllowImplicitFlow": false,
+	"oauth2Permissions": [],
+	"oauth2RequirePostResponse": false,
+	"optionalClaims": null,
+	"orgRestrictions": [],
+	"parentalControlSettings": {
+		"countriesBlockedForMinors": [],
+		"legalAgeGroupRule": "Allow"
+	},
+	"passwordCredentials": [
+		{
+			"customKeyIdentifier": null,
+			"endDate": "2024-10-12T21:10:57.891Z",
+			"keyId": "a497782d-6b96-4a79-8216-3101219b7892",
+			"startDate": "2022-10-12T21:10:57.891Z",
+			"value": null,
+			"createdOn": "2022-10-12T21:12:02.434712Z",
+			"hint": "_nQ",
+			"displayName": "Season 2022 - 2023"
+		},
+		{
+			"customKeyIdentifier": null,
+			"endDate": "2299-12-30T22:00:00Z",
+			"keyId": "69e894c4-d3d1-4be2-9051-bb332e4ebcb4",
+			"startDate": "2021-03-09T13:01:15.65Z",
+			"value": null,
+			"createdOn": "2021-03-09T13:01:19.0555242Z",
+			"hint": "fa~",
+			"displayName": "Single User Login"
+		}
+	],
+	"preAuthorizedApplications": [],
+	"publisherDomain": "morefimhotmail.onmicrosoft.com",
+	"replyUrlsWithType": [
+		{
+			"url": "msal70b10211-9fb4-4e7c-8a2d-add3e1486d22://auth",
+			"type": "InstalledClient"
+		},
+		{
+			"url": "https://login.live.com/oauth20_desktop.srf",
+			"type": "InstalledClient"
+		},
+		{
+			"url": "https://login.microsoftonline.com/common/oauth2/nativeclient",
+			"type": "InstalledClient"
+		},
+		{
+			"url": "urn:ietf:wg:oauth:2.0:oob",
+			"type": "InstalledClient"
+		}
+	],
+	"requiredResourceAccess": [
+		{
+			"resourceAppId": "00000003-0000-0000-c000-000000000000",
+			"resourceAccess": [
+				{
+					"id": "e1fe6dd8-ba31-4d61-89e7-88639da4683d",
+					"type": "Scope"
+				}
+			]
+		}
+	],
+	"samlMetadataUrl": null,
+	"signInUrl": null,
+	"signInAudience": "AzureADMyOrg",
+	"tags": [],
+	"tokenEncryptionKeyId": null
+}

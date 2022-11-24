@@ -1,0 +1,15 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="OutlookGoogleSync" GeneratedClassName="MainSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="appId" Type="System.String" Scope="User">
+      <Value Profile="(Default)">70b10211-9fb4-4e7c-8a2d-add3e1486d22</Value>
+    </Setting>
+    <Setting Name="clientSecret" Type="System.String" Scope="User">
+      <Value Profile="(Default)">a497782d-6b96-4a79-8216-3101219b7892</Value>
+    </Setting>
+    <Setting Name="tenantId" Type="System.String" Scope="User">
+      <Value Profile="(Default)">7dee2c10-6f6e-4ec9-894c-19f40ea4cdf2</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

@@ -1,0 +1,6 @@
+obj\Release\Product.wixobj
+C:\Users\Administrator\source\repos\OutlookGoogleSync\OutlookGoogleSyncSetup\bin\Release\OutlookGoogleSyncSetup.msi
+C:\Users\Administrator\source\repos\OutlookGoogleSync\OutlookGoogleSyncSetup\bin\Release\OutlookGoogleSyncSetup.wixpdb
+obj\Release\OutlookGoogleSyncSetup.wixproj.BindContentsFileListnull.txt
+obj\Release\OutlookGoogleSyncSetup.wixproj.BindOutputsFileListnull.txt
+obj\Release\OutlookGoogleSyncSetup.wixproj.BindBuiltOutputsFileListnull.txt

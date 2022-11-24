@@ -80,6 +80,7 @@ namespace OutlookGoogleSync
             this.sincNowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cbByPassKLALogoutPolicy = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -94,12 +95,15 @@ namespace OutlookGoogleSync
             // 
             // tabControl1
             // 
+            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Location = new System.Drawing.Point(12, 12);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(543, 416);
+            this.tabControl1.Size = new System.Drawing.Size(543, 437);
             this.tabControl1.TabIndex = 0;
             // 
             // tabPage1
@@ -138,7 +142,7 @@ namespace OutlookGoogleSync
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(535, 390);
+            this.tabPage2.Size = new System.Drawing.Size(535, 411);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Settings";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -197,7 +201,7 @@ namespace OutlookGoogleSync
             this.groupBox5.Controls.Add(this.cbAddDescription);
             this.groupBox5.Location = new System.Drawing.Point(272, 239);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(257, 108);
+            this.groupBox5.Size = new System.Drawing.Size(257, 129);
             this.groupBox5.TabIndex = 12;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "When creating Google Calendar Entries...   ";
@@ -234,13 +238,14 @@ namespace OutlookGoogleSync
             // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.cbByPassKLALogoutPolicy);
             this.groupBox4.Controls.Add(this.cbStartWithWindows);
             this.groupBox4.Controls.Add(this.cbMinimizeToTray);
             this.groupBox4.Controls.Add(this.cbStartInTray);
             this.groupBox4.Controls.Add(this.cbCreateFiles);
             this.groupBox4.Location = new System.Drawing.Point(7, 239);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(256, 140);
+            this.groupBox4.Size = new System.Drawing.Size(256, 161);
             this.groupBox4.TabIndex = 11;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Options";
@@ -336,9 +341,10 @@ namespace OutlookGoogleSync
             // 
             // bSave
             // 
+            this.bSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.bSave.Image = global::OutlookGoogleSync.Properties.Resources.save;
             this.bSave.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.bSave.Location = new System.Drawing.Point(439, 353);
+            this.bSave.Location = new System.Drawing.Point(439, 374);
             this.bSave.Name = "bSave";
             this.bSave.Size = new System.Drawing.Size(90, 26);
             this.bSave.TabIndex = 8;
@@ -438,9 +444,10 @@ namespace OutlookGoogleSync
             // 
             // buttonIconize
             // 
+            this.buttonIconize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonIconize.Image = global::OutlookGoogleSync.Properties.Resources.calendar;
             this.buttonIconize.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.buttonIconize.Location = new System.Drawing.Point(465, 434);
+            this.buttonIconize.Location = new System.Drawing.Point(465, 455);
             this.buttonIconize.Name = "buttonIconize";
             this.buttonIconize.Size = new System.Drawing.Size(90, 26);
             this.buttonIconize.TabIndex = 2;
@@ -451,9 +458,10 @@ namespace OutlookGoogleSync
             // 
             // bSyncNow
             // 
+            this.bSyncNow.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.bSyncNow.Image = global::OutlookGoogleSync.Properties.Resources.sync;
             this.bSyncNow.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.bSyncNow.Location = new System.Drawing.Point(369, 434);
+            this.bSyncNow.Location = new System.Drawing.Point(369, 455);
             this.bSyncNow.Name = "bSyncNow";
             this.bSyncNow.Size = new System.Drawing.Size(90, 26);
             this.bSyncNow.TabIndex = 0;
@@ -481,44 +489,54 @@ namespace OutlookGoogleSync
             this.toolStripMenuItem1,
             this.exitToolStripMenuItem});
             this.notifyIconContextMenu.Name = "notifyIconContextMenu";
-            this.notifyIconContextMenu.Size = new System.Drawing.Size(118, 82);
+            this.notifyIconContextMenu.Size = new System.Drawing.Size(125, 82);
             // 
             // showToolStripMenuItem
             // 
             this.showToolStripMenuItem.Name = "showToolStripMenuItem";
-            this.showToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
+            this.showToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.showToolStripMenuItem.Text = "Show...";
             this.showToolStripMenuItem.Click += new System.EventHandler(this.showToolStripMenuItem_Click);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(114, 6);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(121, 6);
             // 
             // sincNowToolStripMenuItem
             // 
             this.sincNowToolStripMenuItem.Name = "sincNowToolStripMenuItem";
-            this.sincNowToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
+            this.sincNowToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.sincNowToolStripMenuItem.Text = "Sinc Now";
             this.sincNowToolStripMenuItem.Click += new System.EventHandler(this.sincNowToolStripMenuItem_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(114, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(121, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            // 
+            // cbByPassKLALogoutPolicy
+            // 
+            this.cbByPassKLALogoutPolicy.Location = new System.Drawing.Point(12, 131);
+            this.cbByPassKLALogoutPolicy.Name = "cbByPassKLALogoutPolicy";
+            this.cbByPassKLALogoutPolicy.Size = new System.Drawing.Size(171, 24);
+            this.cbByPassKLALogoutPolicy.TabIndex = 9;
+            this.cbByPassKLALogoutPolicy.Text = "Bypass KLA Logout Policy";
+            this.cbByPassKLALogoutPolicy.UseVisualStyleBackColor = true;
+            this.cbByPassKLALogoutPolicy.CheckedChanged += new System.EventHandler(this.cbByPassKLALogoutPolicy_CheckedChanged);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(567, 469);
+            this.ClientSize = new System.Drawing.Size(567, 490);
             this.Controls.Add(this.buttonIconize);
             this.Controls.Add(this.bSyncNow);
             this.Controls.Add(this.tabControl1);
@@ -588,14 +606,6 @@ namespace OutlookGoogleSync
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox tbSyncPeriod;
-		
-	
-
-
-
-		
-
-		
-
-	}
+        private System.Windows.Forms.CheckBox cbByPassKLALogoutPolicy;
+    }
 }

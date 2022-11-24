@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<Settings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <RefreshToken />
+    <DaysInThePast>1</DaysInThePast>
+    <DaysInTheFuture>7</DaysInTheFuture>
+    <UseGoogleCalendar>
+        <Id>K9vPTZe/dXf8r+ae4gT044WAt2Ase+Ha6ZM/YQ+DO4bzu4I9ESXgaJXIj7n6p00i8JxFn4kPER0eiUOxGtS2fA==</Id>
+        <Name>1oIAQ7ojnlWQ1gpeb8Mge+Oz9975L9IQG94IWjYlD40=</Name>
+    </UseGoogleCalendar>
+    <SyncEvery>true</SyncEvery>
+    <SyncPeriod>15</SyncPeriod>
+    <ShowBubbleTooltipWhenSyncing>false</ShowBubbleTooltipWhenSyncing>
+    <StartInTray>true</StartInTray>
+    <MinimizeToTray>true</MinimizeToTray>
+    <AddDescription>false</AddDescription>
+    <AddReminders>true</AddReminders>
+    <AddAttendeesToDescription>false</AddAttendeesToDescription>
+    <CreateTextFiles>false</CreateTextFiles>
+    <User>efim.morduhovich@kla-tencor.com</User>
+    <Password>oohOJKOfGoicMfRAsQy5SA==</Password>
+    <Autostart>true</Autostart>
+</Settings>

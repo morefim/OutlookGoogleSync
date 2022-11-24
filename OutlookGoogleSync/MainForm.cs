@@ -70,6 +70,7 @@ namespace OutlookGoogleSync
             cbAddReminders.Checked = OgsSettings.Instance.AddReminders;
             cbCreateFiles.Checked = OgsSettings.Instance.CreateTextFiles;
             cbStartWithWindows.Checked = OgsSettings.Instance.Autostart;
+            cbByPassKLALogoutPolicy.Checked = OgsSettings.Instance.ByPassKLALogoutPolicy;
             tbOutlookUser.Text = OgsSettings.Instance.User;
             tbOutlookPassword.Text = OgsSettings.Instance.OutlookPassword;
             tbOutlookPassword.PasswordChar = '*';
@@ -144,14 +145,14 @@ namespace OutlookGoogleSync
             }
         }
 
-        void GetMyGoogleCalendars_Click(object sender, EventArgs e)
+        async void GetMyGoogleCalendars_Click(object sender, EventArgs e)
         {
             bGetMyCalendars.Enabled = false;
             cbCalendars.Enabled = false;
 
             try
             {
-                var calendars = GoogleCalendar.Instance.GetCalendars();
+                var calendars = await GoogleCalendar.Instance.GetCalendars();
                 if (calendars != null)
                 {
                     cbCalendars.Items.Clear();
@@ -318,6 +319,11 @@ namespace OutlookGoogleSync
         private void cbStartWithWindows_CheckedChanged(object sender, EventArgs e)
         {
             OgsSettings.Instance.Autostart = cbStartWithWindows.Checked;
+        }
+
+        private void cbByPassKLALogoutPolicy_CheckedChanged(object sender, EventArgs e)
+        {
+            OgsSettings.Instance.ByPassKLALogoutPolicy = cbByPassKLALogoutPolicy.Checked;
         }
 
         void NotifyIconDoubleClick(object sender, EventArgs e)

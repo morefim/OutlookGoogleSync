@@ -1,0 +1,75 @@
+11/24/2022 9:06:31 AM	Google.Apis.Auth.OAuth2.Responses.TokenResponseException: Error:"Server response does not contain a JSON object. Status code is: ServiceUnavailable", Description:"", Uri:""
+   at Google.Apis.Auth.OAuth2.Responses.TokenResponse.<FromHttpResponseAsync>d__44.MoveNext() in C:\Apiary\2022-03-28.08-00-01\Src\Support\Google.Apis.Auth\OAuth2\Responses\TokenResponse.cs:line 217
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Google.Apis.Auth.OAuth2.Requests.TokenRequestExtenstions.<ExecuteAsync>d__1.MoveNext() in C:\Apiary\2022-03-28.08-00-01\Src\Support\Google.Apis.Auth\OAuth2\Requests\TokenRequestExtenstions.cs:line 57
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Google.Apis.Auth.OAuth2.Flows.AuthorizationCodeFlow.<FetchTokenAsync>d__42.MoveNext() in C:\Apiary\2022-03-28.08-00-01\Src\Support\Google.Apis.Auth\OAuth2\Flows\AuthorizationCodeFlow.cs:line 338
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Google.Apis.Auth.OAuth2.Flows.AuthorizationCodeFlow.<FetchTokenAsync>d__42.MoveNext() in C:\Apiary\2022-03-28.08-00-01\Src\Support\Google.Apis.Auth\OAuth2\Flows\AuthorizationCodeFlow.cs:line 354
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Google.Apis.Auth.OAuth2.Flows.AuthorizationCodeFlow.<RefreshTokenAsync>d__38.MoveNext() in C:\Apiary\2022-03-28.08-00-01\Src\Support\Google.Apis.Auth\OAuth2\Flows\AuthorizationCodeFlow.cs:line 287
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Google.Apis.Auth.OAuth2.UserCredential.<RefreshTokenAsync>d__29.MoveNext() in C:\Apiary\2022-03-28.08-00-01\Src\Support\Google.Apis.Auth\OAuth2\UserCredential.cs:line 177
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Google.Apis.Auth.OAuth2.TokenRefreshManager.<RefreshTokenAsync>d__12.MoveNext() in C:\Apiary\2022-03-28.08-00-01\Src\Support\Google.Apis.Auth\OAuth2\TokenRefreshManager.cs:line 139
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Google.Apis.Auth.OAuth2.TokenRefreshManager.<GetAccessTokenForRequestAsync>d__10.MoveNext() in C:\Apiary\2022-03-28.08-00-01\Src\Support\Google.Apis.Auth\OAuth2\TokenRefreshManager.cs:line 124
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Google.Apis.Auth.OAuth2.TokenRefreshManager.<<GetAccessTokenForRequestAsync>g__LogException|10_0>d.MoveNext() in C:\Apiary\2022-03-28.08-00-01\Src\Support\Google.Apis.Auth\OAuth2\TokenRefreshManager.cs:line 114
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Google.Apis.Auth.OAuth2.UserCredential.<GetAccessTokenWithHeadersForRequestAsync>d__28.MoveNext() in C:\Apiary\2022-03-28.08-00-01\Src\Support\Google.Apis.Auth\OAuth2\UserCredential.cs:line 155
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Google.Apis.Auth.OAuth2.UserCredential.<InterceptAsync>d__24.MoveNext() in C:\Apiary\2022-03-28.08-00-01\Src\Support\Google.Apis.Auth\OAuth2\UserCredential.cs:line 112
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Google.Apis.Http.ConfigurableMessageHandler.<CredentialInterceptAsync>d__71.MoveNext() in C:\Apiary\2022-03-28.08-00-01\Src\Support\Google.Apis.Core\Http\ConfigurableMessageHandler.cs:line 651
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Google.Apis.Http.ConfigurableMessageHandler.<SendAsync>d__69.MoveNext() in C:\Apiary\2022-03-28.08-00-01\Src\Support\Google.Apis.Core\Http\ConfigurableMessageHandler.cs:line 449
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Google.Apis.Requests.ClientServiceRequest`1.<ExecuteUnparsedAsync>d__34.MoveNext() in C:\Apiary\2022-03-28.08-00-01\Src\Support\Google.Apis\Requests\ClientServiceRequest.cs:line 243
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Google.Apis.Requests.ClientServiceRequest`1.<ExecuteAsync>d__31.MoveNext() in C:\Apiary\2022-03-28.08-00-01\Src\Support\Google.Apis\Requests\ClientServiceRequest.cs:line 213
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Google.Apis.Requests.ClientServiceRequest`1.<ExecuteAsync>d__30.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at OutlookGoogleSync.GoogleCalendar.<GetCalendarEntriesInRange>d__15.MoveNext() in C:\Users\Administrator\source\repos\OutlookGoogleSync\OutlookGoogleSync\GoogleCalendar.cs:line 130
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at OutlookGoogleSync.SyncManager.<PrivateDoWorkCallback>d__14.MoveNext() in C:\Users\Administrator\source\repos\OutlookGoogleSync\OutlookGoogleSync\SyncManager.cs:line 70
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at OutlookGoogleSync.SyncManager.<DoWork>d__13.MoveNext() in C:\Users\Administrator\source\repos\OutlookGoogleSync\OutlookGoogleSync\SyncManager.cs:line 32

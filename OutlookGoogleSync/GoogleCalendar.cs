@@ -2,15 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Reactive.Subjects;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
+using System.Threading.Tasks;
 using Google;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Calendar.v3;
 using Google.Apis.Calendar.v3.Data;
 using Google.Apis.Services;
 using Google.Apis.Util.Store;
+using Polly;
+using Polly.Retry;
 
 
 namespace OutlookGoogleSync
@@ -52,8 +56,14 @@ namespace OutlookGoogleSync
             CalendarService.Scope.Calendar, // Manage your calendars
             CalendarService.Scope.CalendarReadonly // View your Calendars 
         };
-	    
-		public GoogleCalendar()
+
+        public ISubject<Exception> OnException = new Subject<Exception>();
+
+        public ISubject<string> OnLog = new Subject<string>();
+
+        private readonly AsyncRetryPolicy _policy;
+
+        public GoogleCalendar()
         {
             NEVER_EAT_POISON_Disable_CertificateValidation();
 
@@ -73,7 +83,26 @@ namespace OutlookGoogleSync
                 HttpClientInitializer = credential,
                 ApplicationName = ApplicationName,
             });
-		}
+
+            var waitTime = TimeSpan.FromSeconds(10);
+
+            _policy = Policy
+                .Handle<Exception>()
+                .WaitAndRetryAsync(3, _ => waitTime,
+                    (exception, timeSpan, context) =>
+                    {
+                        if (context.TryGetValue("Event", out var eventValue))
+                        {
+                            if (eventValue is Event e)
+                            {
+                                MoveAttendeesToDescription(e);
+                            }
+                        }
+
+                        var ex = new Exception($"Failed to add Google Calendar Event. Retry in {timeSpan}", exception);
+                        OnException?.OnNext(ex);
+                    });
+        }
 
         //[Obsolete("Do not use this in Production code!!!", true)]
         static void NEVER_EAT_POISON_Disable_CertificateValidation()
@@ -84,13 +113,13 @@ namespace OutlookGoogleSync
             ServicePointManager.ServerCertificateValidationCallback = (s, certificate, chain, sslPolicyErrors) => true;
         }
 
-        public List<OgsCalendarListEntry> GetCalendars()
+        public async Task<List<OgsCalendarListEntry>> GetCalendars()
         {
-            CalendarList request = _service.CalendarList.List().Execute();          
+            CalendarList request = await _service.CalendarList.List().ExecuteAsync();          
             return request != null ? request.Items.Select(cle => new OgsCalendarListEntry(cle)).ToList() : null;
         }
 		
-        public List<Event> GetCalendarEntriesInRange()
+        public async Task<List<Event>> GetCalendarEntriesInRange()
         {
             var result = new List<Event>();
             var lr = _service.Events.List(OgsSettings.Instance.UseGoogleCalendar.CalendarId);
@@ -98,7 +127,7 @@ namespace OutlookGoogleSync
             lr.TimeMin = DateTime.Now.AddDays(-OgsSettings.Instance.DaysInThePast);
             lr.TimeMax = DateTime.Now.AddDays(+OgsSettings.Instance.DaysInTheFuture + 1);
 
-            var request = lr.Execute();
+            var request = await lr.ExecuteAsync();
             if (request != null && request.Items != null)
             {
                 result.AddRange(request.Items);
@@ -106,37 +135,53 @@ namespace OutlookGoogleSync
             return result;
         }
 
-        public void DeleteCalendarEntry(Event e)
+        public async Task<string> DeleteCalendarEntry(Event e)
         {
-            _service.Events.Delete(OgsSettings.Instance.UseGoogleCalendar.CalendarId, e.Id).Execute();
+            return await _service.Events.Delete(OgsSettings.Instance.UseGoogleCalendar.CalendarId, e.Id).ExecuteAsync();
         }
 
-        public void AddEntry(Event e)
+        public async Task<Event> AddEntry(Event e)
         {
-            try
-            {
-                _service.Events.Insert(e, OgsSettings.Instance.UseGoogleCalendar.CalendarId).Execute();
-            }
-            catch (GoogleApiException ex)
+            //try
+            //{
+                if (e.Attendees?.Count > 15)
+                    MoveAttendeesToDescription(e);
+
+                var context = new Dictionary<string, object> { {"Event", e} };
+
+                var result = await _policy.ExecuteAndCaptureAsync(async (c) =>
+                    await _service.Events.Insert(e, OgsSettings.Instance.UseGoogleCalendar.CalendarId).ExecuteAsync(), context);
+
+                if (result.FinalException == null)
+                    return result.Result;
+
+                throw result.FinalException;
+            //}
+            /*catch (GoogleApiException ex)
             {
                 const string error403Signature = @"Calendar usage limits exceeded.";
-                if (ex.Error.Code == 403 && ex.Error.Message == error403Signature)
-                    MoveAttendeesToDescriptionAndRetry(e);
-                else
-                    throw;
+                if (ex.Error.Code == 403 && ex.Error.Message.Contains(error403Signature))
+                {
+                    MoveAttendeesToDescription(e);
+                }
+
+                throw;
             }
+            catch (Exception ex)
+            {
+                OnException?.OnNext(ex);
+                throw;
+            }*/
         }
 
-	    private void MoveAttendeesToDescriptionAndRetry(Event e)
+	    private void MoveAttendeesToDescription(Event e)
 	    {
             e.Description += "Attendees:\r\n";
             foreach (var attendee in e.Attendees)
                 e.Description += attendee.DisplayName + "[" + attendee.Email + "]\r\n";
 
-            e.Attendees.Clear();
+            e.Attendees?.Clear();
 	        e.Attendees = null;
-
-	        _service.Events.Insert(e, OgsSettings.Instance.UseGoogleCalendar.CalendarId).Execute();
 	    }				
 	}
 }

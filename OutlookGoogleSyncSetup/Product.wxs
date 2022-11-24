@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"><?define OutlookGoogleSync_TargetDir=$(var.OutlookGoogleSync.TargetDir)?>
+	<Product Id="*" Name="OutlookGoogleSyncSetup" Language="1033" Version="1.0.0.0" Manufacturer="KLA-Tencor" UpgradeCode="9e27f6fc-2257-45f1-aae7-5a3a62dd95dd">
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+		<MediaTemplate EmbedCab="yes" />
+
+		<Feature Id="ProductFeature" Title="OutlookGoogleSyncSetup" Level="1">
+			<ComponentGroupRef Id="ProductComponents" />
+		</Feature>
+	</Product>
+
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder">
+				<Directory Id="INSTALLFOLDER" Name="OutlookGoogleSync" />
+			</Directory>
+			<Directory Id="DesktopFolder" SourceName="DesktopFolder" />
+		</Directory>
+	</Fragment>
+
+	<Fragment>
+		<DirectoryRef Id="INSTALLDIR">
+			<Component Id="ShortcutDesktop" Guid="{56127F5D-B159-4C9A-92AA-812B4E213EB2}">
+				<!--<CreateFolder/>-->
+				<RegistryKey Root="HKCU" Key="Software\KLA-Tencor\OutlookGoogleSync">
+					<RegistryValue Value="Key path required by ICE38" Type="string" KeyPath="yes" />
+				</RegistryKey>
+				<Shortcut
+					Id="ShortcutDesktop_Shortcut_OutlookGoogleSync"
+					Directory="DesktopFolder"
+					Target="$(var.OutlookGoogleSync_TargetDir)OutlookGoogleSync.exe"
+					Name="OutlookGoogleSync"
+					WorkingDirectory="INSTALLFOLDER"
+					Advertise="no" >
+				</Shortcut>
+			</Component>
+		</DirectoryRef>
+	</Fragment>
+
+	<Fragment>
+		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+			<!-- TODO: Remove the comments around this Component element and the ComponentRef below in order to add resources to this installer. -->
+			<!-- <Component Id="ProductComponent"> -->
+				<!-- TODO: Insert files, registry keys, and other resources here. -->
+			<!-- </Component> -->
+			<Component Id="OutlookGoogleSync.exe" Guid="b36acde8-ba68-49a5-8013-d3727f40f3ea">
+			  <File Id="OutlookGoogleSync.exe" Name="OutlookGoogleSync.exe" Source="$(var.OutlookGoogleSync_TargetDir)OutlookGoogleSync.exe" />
+			</Component>
+			<Component Id="OutlookGoogleSync.exe.config" Guid="29560dd4-4c25-4fa8-aa78-797746cc42fd">
+			  <File Id="OutlookGoogleSync.exe.config" Name="OutlookGoogleSync.exe.config" Source="$(var.OutlookGoogleSync_TargetDir)OutlookGoogleSync.exe.config" />
+			</Component>
+			<Component Id="Google.Apis.Calendar.v3.dll" Guid="5a363d95-aeb4-4632-ac51-2ee41cca4d76">
+			  <File Id="Google.Apis.Calendar.v3.dll" Name="Google.Apis.Calendar.v3.dll" Source="$(var.OutlookGoogleSync_TargetDir)Google.Apis.Calendar.v3.dll" />
+			</Component>
+			<Component Id="Polly.dll" Guid="9e4e2e75-eb65-481d-aada-1d29ff2152cd">
+			  <File Id="Polly.dll" Name="Polly.dll" Source="$(var.OutlookGoogleSync_TargetDir)Polly.dll" />
+			</Component>
+			<Component Id="Microsoft.IdentityModel.Protocols.dll" Guid="7b4e2d64-4c8a-4308-84ce-9d876069a04c">
+			  <File Id="Microsoft.IdentityModel.Protocols.dll" Name="Microsoft.IdentityModel.Protocols.dll" Source="$(var.OutlookGoogleSync_TargetDir)Microsoft.IdentityModel.Protocols.dll" />
+			</Component>
+			<Component Id="System.Reactive.dll" Guid="c8d8c872-484c-4ff2-84c1-032b1af95142">
+			  <File Id="System.Reactive.dll" Name="System.Reactive.dll" Source="$(var.OutlookGoogleSync_TargetDir)System.Reactive.dll" />
+			</Component>
+			<Component Id="Microsoft.Bcl.AsyncInterfaces.dll" Guid="e3d9a304-d4e8-4ec8-a395-e7920445083c">
+			  <File Id="Microsoft.Bcl.AsyncInterfaces.dll" Name="Microsoft.Bcl.AsyncInterfaces.dll" Source="$(var.OutlookGoogleSync_TargetDir)Microsoft.Bcl.AsyncInterfaces.dll" />
+			</Component>
+			<Component Id="System.Text.Json.dll" Guid="f699cdd6-6327-4407-9291-4659eee05ad1">
+			  <File Id="System.Text.Json.dll" Name="System.Text.Json.dll" Source="$(var.OutlookGoogleSync_TargetDir)System.Text.Json.dll" />
+			</Component>
+			<Component Id="System.Memory.dll" Guid="54c5183a-6623-4a13-9944-f8ff10d0f156">
+			  <File Id="System.Memory.dll" Name="System.Memory.dll" Source="$(var.OutlookGoogleSync_TargetDir)System.Memory.dll" />
+			</Component>
+			<Component Id="System.Numerics.Vectors.dll" Guid="bc8a18b7-8f79-4a07-bfd8-d06b42f48027">
+			  <File Id="System.Numerics.Vectors.dll" Name="System.Numerics.Vectors.dll" Source="$(var.OutlookGoogleSync_TargetDir)System.Numerics.Vectors.dll" />
+			</Component>
+			<Component Id="System.Buffers.dll" Guid="6e6555a2-99d0-4cc4-ac0d-4b734113c489">
+			  <File Id="System.Buffers.dll" Name="System.Buffers.dll" Source="$(var.OutlookGoogleSync_TargetDir)System.Buffers.dll" />
+			</Component>
+			<Component Id="System.Text.Encodings.Web.dll" Guid="3a1bf88a-f61b-4d44-af2b-0144c12d34f5">
+			  <File Id="System.Text.Encodings.Web.dll" Name="System.Text.Encodings.Web.dll" Source="$(var.OutlookGoogleSync_TargetDir)System.Text.Encodings.Web.dll" />
+			</Component>
+			<Component Id="System.ValueTuple.dll" Guid="b1e0d137-06f2-4f18-8578-84761b9eee54">
+			  <File Id="System.ValueTuple.dll" Name="System.ValueTuple.dll" Source="$(var.OutlookGoogleSync_TargetDir)System.ValueTuple.dll" />
+			</Component>
+			<Component Id="System.Memory.Data.dll" Guid="2d77bea2-bfd9-4b76-8055-5010b698b7a0">
+			  <File Id="System.Memory.Data.dll" Name="System.Memory.Data.dll" Source="$(var.OutlookGoogleSync_TargetDir)System.Memory.Data.dll" />
+			</Component>
+			<Component Id="System.Diagnostics.DiagnosticSource.dll" Guid="38530f40-6c8b-4429-bf38-a82119a9d131">
+			  <File Id="System.Diagnostics.DiagnosticSource.dll" Name="System.Diagnostics.DiagnosticSource.dll" Source="$(var.OutlookGoogleSync_TargetDir)System.Diagnostics.DiagnosticSource.dll" />
+			</Component>
+			<Component Id="System.IdentityModel.Tokens.Jwt.dll" Guid="6bc83986-e9c9-4688-bf9a-b386c8931cdd">
+			  <File Id="System.IdentityModel.Tokens.Jwt.dll" Name="System.IdentityModel.Tokens.Jwt.dll" Source="$(var.OutlookGoogleSync_TargetDir)System.IdentityModel.Tokens.Jwt.dll" />
+			</Component>
+			<Component Id="Microsoft.IdentityModel.Tokens.dll" Guid="eb6acc8f-76dd-482b-913f-4b2c5299d22b">
+			  <File Id="Microsoft.IdentityModel.Tokens.dll" Name="Microsoft.IdentityModel.Tokens.dll" Source="$(var.OutlookGoogleSync_TargetDir)Microsoft.IdentityModel.Tokens.dll" />
+			</Component>
+			<Component Id="Microsoft.IdentityModel.Logging.dll" Guid="8352b8d9-9079-4c50-a028-072fb916f3b1">
+			  <File Id="Microsoft.IdentityModel.Logging.dll" Name="Microsoft.IdentityModel.Logging.dll" Source="$(var.OutlookGoogleSync_TargetDir)Microsoft.IdentityModel.Logging.dll" />
+			</Component>
+			<Component Id="Microsoft.IdentityModel.Abstractions.dll" Guid="1d5c69c1-96bd-41f4-a84e-6408217aa026">
+			  <File Id="Microsoft.IdentityModel.Abstractions.dll" Name="Microsoft.IdentityModel.Abstractions.dll" Source="$(var.OutlookGoogleSync_TargetDir)Microsoft.IdentityModel.Abstractions.dll" />
+			</Component>
+			<Component Id="Microsoft.IdentityModel.JsonWebTokens.dll" Guid="c388d3d3-5989-41d0-9ef1-185512cf35e3">
+			  <File Id="Microsoft.IdentityModel.JsonWebTokens.dll" Name="Microsoft.IdentityModel.JsonWebTokens.dll" Source="$(var.OutlookGoogleSync_TargetDir)Microsoft.IdentityModel.JsonWebTokens.dll" />
+			</Component>
+			<Component Id="Microsoft.IdentityModel.Protocols.OpenIdConnect.dll" Guid="90622d91-8d62-4a9c-8eef-05575d8671bb">
+			  <File Id="Microsoft.IdentityModel.Protocols.OpenIdConnect.dll" Name="Microsoft.IdentityModel.Protocols.OpenIdConnect.dll" Source="$(var.OutlookGoogleSync_TargetDir)Microsoft.IdentityModel.Protocols.OpenIdConnect.dll" />
+			</Component>
+			<Component Id="Azure.Core.dll" Guid="c8e015ad-191a-4260-8357-4f29dd1b1a54">
+			  <File Id="Azure.Core.dll" Name="Azure.Core.dll" Source="$(var.OutlookGoogleSync_TargetDir)Azure.Core.dll" />
+			</Component>
+			<Component Id="System.Runtime.CompilerServices.Unsafe.dll" Guid="36ecc59b-59c8-4fbe-9a30-624dc423080e">
+			  <File Id="System.Runtime.CompilerServices.Unsafe.dll" Name="System.Runtime.CompilerServices.Unsafe.dll" Source="$(var.OutlookGoogleSync_TargetDir)System.Runtime.CompilerServices.Unsafe.dll" />
+			</Component>
+			<Component Id="System.Threading.Tasks.Extensions.dll" Guid="88070d4a-9c14-4817-bf22-c89ccdf1f683">
+			  <File Id="System.Threading.Tasks.Extensions.dll" Name="System.Threading.Tasks.Extensions.dll" Source="$(var.OutlookGoogleSync_TargetDir)System.Threading.Tasks.Extensions.dll" />
+			</Component>
+			<Component Id="Newtonsoft.Json.dll" Guid="8b32d3e1-4776-4227-a0c1-28d8314f389a">
+			  <File Id="Newtonsoft.Json.dll" Name="Newtonsoft.Json.dll" Source="$(var.OutlookGoogleSync_TargetDir)Newtonsoft.Json.dll" />
+			</Component>
+			<Component Id="Google.Apis.dll" Guid="df629090-a6d4-4f20-8d2e-9bfe0dc3313b">
+			  <File Id="Google.Apis.dll" Name="Google.Apis.dll" Source="$(var.OutlookGoogleSync_TargetDir)Google.Apis.dll" />
+			</Component>
+			<Component Id="ChilkatDotNet47.dll" Guid="54c1a6cc-9bfa-4f5a-903a-173c61eba03d">
+			  <File Id="ChilkatDotNet47.dll" Name="ChilkatDotNet47.dll" Source="$(var.OutlookGoogleSync_TargetDir)ChilkatDotNet47.dll" />
+			</Component>
+			<Component Id="Microsoft.Graph.Core.dll" Guid="f4d97b52-a795-4d39-bcc7-16008f4385c9">
+			  <File Id="Microsoft.Graph.Core.dll" Name="Microsoft.Graph.Core.dll" Source="$(var.OutlookGoogleSync_TargetDir)Microsoft.Graph.Core.dll" />
+			</Component>
+			<Component Id="Microsoft.Identity.Client.dll" Guid="52ac1eb6-ce21-4736-aed4-d5867d7becf3">
+			  <File Id="Microsoft.Identity.Client.dll" Name="Microsoft.Identity.Client.dll" Source="$(var.OutlookGoogleSync_TargetDir)Microsoft.Identity.Client.dll" />
+			</Component>
+			<Component Id="Microsoft.Graph.dll" Guid="bd4963a0-f636-4bc2-b77a-8e16ee38222c">
+			  <File Id="Microsoft.Graph.dll" Name="Microsoft.Graph.dll" Source="$(var.OutlookGoogleSync_TargetDir)Microsoft.Graph.dll" />
+			</Component>
+			<Component Id="System.Net.Http.WinHttpHandler.dll" Guid="35aed11d-381b-4618-8036-bda09084fdf7">
+			  <File Id="System.Net.Http.WinHttpHandler.dll" Name="System.Net.Http.WinHttpHandler.dll" Source="$(var.OutlookGoogleSync_TargetDir)System.Net.Http.WinHttpHandler.dll" />
+			</Component>
+			<Component Id="Google.Apis.Auth.dll" Guid="bb832aac-99d7-4bab-9565-e21fceeb4194">
+			  <File Id="Google.Apis.Auth.dll" Name="Google.Apis.Auth.dll" Source="$(var.OutlookGoogleSync_TargetDir)Google.Apis.Auth.dll" />
+			</Component>
+			<Component Id="Google.Apis.Core.dll" Guid="e2a6b72b-2c2b-447a-9135-1181d04ff10f">
+			  <File Id="Google.Apis.Core.dll" Name="Google.Apis.Core.dll" Source="$(var.OutlookGoogleSync_TargetDir)Google.Apis.Core.dll" />
+			</Component>
+			<Component Id="Interop.IWshRuntimeLibrary.dll" Guid="062d43a4-ec59-40cd-9a79-3e7dda380d37">
+			  <File Id="Interop.IWshRuntimeLibrary.dll" Name="Interop.IWshRuntimeLibrary.dll" Source="$(var.OutlookGoogleSync_TargetDir)Interop.IWshRuntimeLibrary.dll" />
+			</Component>
+		</ComponentGroup>
+	</Fragment>
+</Wix>

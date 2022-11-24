@@ -57,7 +57,6 @@ namespace OutlookGoogleSync
 			
             // Get the Calendar folder.
             UseOutlookCalendar = oNs.GetDefaultFolder(OlDefaultFolders.olFolderCalendar);
-
             
             //Show the item to pause.
             //oAppt.Display(true);
